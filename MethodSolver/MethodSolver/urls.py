@@ -19,5 +19,13 @@ from app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.menu, name="menu")
+    path('', views.menu, name="menu"),
+    path('biseccion', views.biseccion, name="biseccion"),
+    path('gausspiv', views.menu, name="gausspiv"),
+    path('newton', views.menu, name="newton"),
+    path('pf', views.menu, name="pf"),
+    path('rf', views.menu, name="rf"),
+    path('secante', views.menu, name="secante"),
+    path('taylorcos', views.menu, name="taylorcos"),
+    path('taylorsen', views.menu, name="taylorsen")
 ]
