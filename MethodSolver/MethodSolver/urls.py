@@ -27,5 +27,6 @@ urlpatterns = [
     path('rf', views.menu, name="rf"),
     path('secante', views.menu, name="secante"),
     path('taylorcos', views.menu, name="taylorcos"),
-    path('taylorsen', views.menu, name="taylorsen")
+    path('taylorsen', views.menu, name="taylorsen"),
+
 ]
