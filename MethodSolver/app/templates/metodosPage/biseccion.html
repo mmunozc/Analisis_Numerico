@@ -55,28 +55,27 @@
         </div>
     </div>
 
-#TODO: CUADRAR LA
+<!-- TODO: CUADRAR LA TABLA -->
     <div class="col-5">
         <h2>Solucion</h2>
         <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Iteraciones</th>
-                    <th scope="col">xm</th>
-                    <th scope="col">f(xm)</th>
-                    <th scope="col">a</th>
-                    <th scope="col">b</th>
-                    <th scope="col">E</th>
-                </tr>
-            </thead>
-            {%if list %} {%for data in list %}
-            <tbody>
-                <tr>
-                    {%for valores in data %}
-                    <td>{{valores}} {% endfor %}</td>
-                    {% endfor %}
-                </tr>
-            </tbody>
+            <tr>
+                <th scope="col">Iteraciones</th>
+                <th scope="col">xm</th>
+                <th scope="col">f(xm)</th>
+                <th scope="col">E</th>
+            </tr>
+            
+            {%if list %} 
+            {%for data in list %}
+            <tr>
+                {%for valores in data %}
+                <td>
+                    {{valores}}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
             {% endif %}
 
         </table>

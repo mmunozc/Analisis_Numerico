@@ -23,7 +23,9 @@ def biseccion(fx, tol, niter, xs, xi):
     fi = Fun.evalf(subs={x: Xi})
     xAux = Xs
     fs = Fun.evalf(subs={x: Xs})
-    
+    iter = []
+    Xms = []
+
     if fi == 0:
         s = Xi
         E = 0
@@ -39,6 +41,8 @@ def biseccion(fx, tol, niter, xs, xi):
         fe = Fun.evalf(subs={x: xAux})
         fm.append(fe)
         E.append(100)
+        iter.append(c)
+        Xms.append(xAux)
         while E[c] > Tol and fe != 0 and c < Niter:
             if fi*fe < 0:
                 Xs = Xm
@@ -56,6 +60,12 @@ def biseccion(fx, tol, niter, xs, xi):
             Error = abs(Xm-Xa)
             E.append(Error)
             c = c+1
+            iter.append(c)
+            Xms.append(xAux)
+
+            #Se guardan los datos
+            datos = (iter, Xms, fm, E)
+
         if fe == 0:
             s = xAux
             print(s, "es raiz de f(x)")
@@ -64,11 +74,13 @@ def biseccion(fx, tol, niter, xs, xi):
             #print("//", "Fm:", fm, "//")
             #print("//", "Error:", fm, "//")
             #print(s, "es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
+            return  datos
 
-            return fm, Error
         else:
             s = xAux
             print("Fracaso en ", Niter, " iteraciones ")
+        
+        
     else:
         print("El intervalo es inadecuado")
 
