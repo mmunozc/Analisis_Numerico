@@ -1,6 +1,7 @@
 import sympy as sympy
-from sympy.abc import x
 
+
+from sympy.abc import x
 import pandas as pd
 import numpy as np
 import math
@@ -60,9 +61,11 @@ def biseccion(fx, tol, niter, xs, xi):
             print(s, "es raiz de f(x)")
         elif Error < Tol:
             s = xAux
-            print(s, "es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
-            print("Fm", fm)
-            print("Error", fm)
+            #print("//", "Fm:", fm, "//")
+            #print("//", "Error:", fm, "//")
+            #print(s, "es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
+
+            return fm, Error
         else:
             s = xAux
             print("Fracaso en ", Niter, " iteraciones ")
