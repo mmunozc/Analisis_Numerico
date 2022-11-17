@@ -59,24 +59,28 @@
     <div class="col-5">
         <h2>Solucion</h2>
         <table class="table">
-            <tr>
-                <th scope="col">Iteraciones</th>
-                <th scope="col">xm</th>
-                <th scope="col">f(xm)</th>
-                <th scope="col">E</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th scope="col">Iteraciones</th>
+                    <th scope="col">xm</th>
+                    <th scope="col">f(xm)</th>
+                    <th scope="col">E</th>
+                </tr>
+            </thead>
             
-            {%if list %} 
-            {%for data in list %}
-            <tr>
-                {%for valores in data %}
-                <td>
-                    {{valores}}
-                </td>
+            <tbody>
+                {%if list %} 
+                {%for data in list %}
+                <tr>
+                    {%for valores in data %}
+                    <td>
+                        {{valores}}
+                    </td>
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </tr>
-            {% endfor %}
-            {% endif %}
+                {% endif %}
+            </tbody>
 
         </table>
     </div>
