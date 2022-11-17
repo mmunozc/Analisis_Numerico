@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<div class="info">
+    <br>
+    <br>
+    <p>Metodo biseccion</p>
+</div>
+
+<div class="row mt-5 mb-10">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ingrese sus datos</h5>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <label for="funcion">Funcion</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="funcion" 
+                                placeholder="Example input">
+
+                        <label for="funcion">Tolerancia</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="tolerancia"  
+                                placeholder="Example input">
+
+                        <label for="funcion">Iteraciones</label>
+                        <input type="number" 
+                                class="form-control" 
+                                name="iteraciones" 
+                                placeholder="Example input">
+
+                        <label for="funcion">Valor de intervalo (X)</label>
+                        <input type="number" 
+                                class="form-control" 
+                                name="xs" 
+                                placeholder="Example input">
+
+                        <label for="funcion">Valor de intervalo (Y)</label>
+                        <input type="number" 
+                                class="form-control" 
+                                name="xi" 
+                                placeholder="Example input">
+                        
+                        
+                        <button type="submit" class="btn btn-outline-secondary" >Evaluar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+#TODO: CUADRAR LA TABLA
+    <div class="col-5">
+        <h2>Solucion</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Iteraciones</th>
+                    <th scope="col">xm</th>
+                    <th scope="col">f(xm)</th>
+                    <th scope="col">a</th>
+                    <th scope="col">b</th>
+                    <th scope="col">E</th>
+                </tr>
+            </thead>
+            {%if list %} {%for data in list %}
+            <tbody>
+                <tr>
+                    {%for valores in data %}
+                    <td>{{valores}} {% endfor %}</td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+            {% endif %}
+
+        </table>
+    </div>
+</div>
+
+{% endblock %}
