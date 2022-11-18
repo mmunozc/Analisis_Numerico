@@ -6,7 +6,7 @@
 <div class="info">
     <br>
     <br>
-    <p>Metodo punto fijo</p>
+    <p>Metodo Newton</p>
 </div>
 
 
@@ -19,16 +19,16 @@
                 <form method="post">
                     <div class="form-group">
                         {% csrf_token %}
-                        <label for="funcion">Funcion F</label>
+                        <label for="funcion">Funcion</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="funcion-F" 
+                                name="funcion" 
                                 placeholder="Example input">
 
-                        <label for="funcion">Funcion G</label>
+                        <label for="funcion">Funcion F` (Primera derivada)</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="funcion-G"  
+                                name="funcion-df"  
                                 placeholder="Example input">
 
                         <label for="funcion">Valor inicial (x0)</label>

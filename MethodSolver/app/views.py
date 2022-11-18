@@ -56,3 +56,7 @@ def puntoFijoView(request):
 
 
     return render(request, './metodosPage/puntoFijo.html')
+
+
+def newtonView(request):
+    return render(request, './metodosPage/newton.html')

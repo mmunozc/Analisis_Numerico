@@ -134,7 +134,70 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
         N.append(c)
         E.append(Error)
     datos.append([N, xn, fn, gn, E])
+    
     if fe == 0:
+        s = xi
+        print(s, "es raiz de f(x)")
+        output["root"] = s
+        return output
+    elif Error < Tol:
+        s = xi
+        print(s, "es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
+        print("N", N)
+        print("xn", xn)
+        print("fn", fn)
+        print("Error", E)
+
+        output["results"] = datos
+        output["root"] = s
+        return output
+    else:
+        s = xi
+        print("Fracaso en ", Niter, " iteraciones ")
+
+
+def newton(X0, Tol, Niter, fx, df):
+
+    output = {
+        "type": 1,
+        "columns": ["N","xi","F(xi)", "G(xi)", "E" ],
+        "errors": list()
+    }
+
+    datos = list()
+    x = sympy.Symbol('x')
+    Fun = sympy.sympify(fx, convert_xor=True)
+    DerF = sympy.sympify(df, convert_xor=True) 
+
+
+    fn = []
+    xn = []
+    E = []
+    N = []
+    derf=[]
+    xi = X0
+    f = Fun.evalf(subs={x: X0})
+    derivada = DerF.evalf(subs={x: X0})
+    c = 0
+    Error = 100
+    fn.append(f)
+    xn.append(x)
+    E.append(Error)
+    N.append(c)
+
+    while Error > Tol and f != 0 and derivada != 0 and c < Niter:
+        xi = xi-f/derivada
+        derivada = DerF.evalf(subs={x: xi})
+        f = Fun.evalf(subs={x: xi})
+        fn.append(f)
+        xn.append(xi)
+        c = c+1
+        Error = abs(xn[c]-xn[c-1])
+        derf.append(derivada)
+        N.append(c)
+        E.append(Error)
+    datos.append([N, xn, fn, derf, E])
+    if f == 0:
         s = xi
         print(s, "es raiz de f(x)")
     elif Error < Tol:
@@ -144,51 +207,9 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
         print("xn", xn)
         print("fn", fn)
         print("Error", E)
-        output["results"] = datos
-        output["root"] = s
-        return output
     else:
         s = xi
         print("Fracaso en ", Niter, " iteraciones ")
-
-
-def newton(X0, Tol, Niter, Fun, df):
-    fn = []
-    xn = []
-    E = []
-    N = []
-    x = X0
-    f = eval(Fun)
-    derivada = eval(df)
-    c = 0
-    Error = 100
-    fn.append(f)
-    xn.append(x)
-    E.append(Error)
-    N.append(c)
-    while Error > Tol and f != 0 and derivada != 0 and c < Niter:
-        x = x-f/derivada
-        derivada = eval(df)
-        f = eval(Fun)
-        fn.append(f)
-        xn.append(x)
-        c = c+1
-        Error = abs(xn[c]-xn[c-1])
-        N.append(c)
-        E.append(Error)
-        if f == 0:
-            s = x
-            print(s, "es raiz de f(x)")
-        elif Error < Tol:
-            s = x
-            print(s, "es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
-            print("N", N)
-            print("xn", xn)
-            print("fn", fn)
-            print("Error", E)
-        else:
-            s = x
-            print("Fracaso en ", Niter, " iteraciones ")
 
 
 def reglaFalsa(Xi, Xf, Niter, Tol, Fun):
