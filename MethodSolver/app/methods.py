@@ -108,6 +108,7 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
     Fun = sympy.sympify(fx, convert_xor=True)
     GFun = sympy.sympify(gx, convert_xor=True) 
 
+    gn = []
     fn = []
     xn = []
     E = []
@@ -118,18 +119,21 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
     Error = 100
 
     fn.append(f)
-    xn.append(x)
+    xn.append(xi)
     E.append(Error)
     N.append(c)
     while Error > Tol and f != 0 and c < Niter:
         xi = GFun.evalf(subs={x: xi})
         fe = Fun.evalf(subs={x: xi})
+        gxFun = GFun.evalf(subs={x: xi})
+        gn.append(gxFun)
         fn.append(fe)
         xn.append(xi)
         c = c+1
         Error = abs(xn[c]-xn[c-1])
         N.append(c)
         E.append(Error)
+    datos.append([N, xn, fn, gn, E])
     if fe == 0:
         s = xi
         print(s, "es raiz de f(x)")
@@ -140,6 +144,9 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
         print("xn", xn)
         print("fn", fn)
         print("Error", E)
+        output["results"] = datos
+        output["root"] = s
+        return output
     else:
         s = xi
         print("Fracaso en ", Niter, " iteraciones ")
