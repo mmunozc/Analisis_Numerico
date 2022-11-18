@@ -1,8 +1,9 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-from app.methods import biseccion
+from app.methods import *
 # Create your views here.
+
 
 def infoView(request):
     return render(request, 'home.html')
@@ -17,45 +18,41 @@ def biseccionView(request):
     if request.method == 'POST':
         fx = request.POST["funcion"]
         tol = request.POST["tolerancia"]
+        Tol = float(tol)
         niter = request.POST["iteraciones"]
+        Niter = int(niter)
         xs = request.POST["xs"]
+        Xs = float(xs)
         xi = request.POST["xi"]
+        Xi = float(xi)
 
-        datos = biseccion(fx, tol, niter, xs, xi)
-        print(datos)
+        datos = biseccion(fx, Tol, Niter, Xs, Xi)
 
     if datos:
-        print("dentro del if", datos)
         return render(request, './metodosPage/biseccion.html', {'data': datos})
-    
 
     return render(request, './metodosPage/biseccion.html')
+
+
+def puntoFijoView(request):
+    datos = ()
+    if request.method == 'POST':
+        fx = request.POST["funcion-F"]
+        gx = request.POST["funcion-G"]
+
+        x0 = request.POST["vInicial"]
+        X0 = float(x0)
+
+        tol = request.POST["tolerancia"]
+        Tol = float(tol)
+
+        niter = request.POST["iteraciones"]
+        Niter = int(niter)
+
+        datos = puntoFijo(X0,Tol,Niter,fx,gx)
     
+    if datos: 
+        return render(request, './metodosPage/biseccion.html', {'data': datos})
 
 
-def gausspiv(request):
-    return render(request, 'home.html')
-
-
-def newton(request):
-    return render(request, 'home.html')
-
-
-def pf(request):
-    return render(request, 'home.html')
-
-
-def rf(request):
-    return render(request, 'home.html')
-
-
-def secante(request):
-    return render(request, 'home.html')
-
-
-def taylorcos(request):
-    return render(request, 'home.html')
-
-
-def taylorsen(request):
-    return render(request, 'home.html')
+    return render(request, './metodosPage/puntoFijo.html')

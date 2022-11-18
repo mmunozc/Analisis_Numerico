@@ -6,7 +6,7 @@
 <div class="info">
     <br>
     <br>
-    <p>Metodo biseccion</p>
+    <p>Metodo punto fijo</p>
 </div>
 
 
@@ -19,34 +19,34 @@
                 <form method="post">
                     <div class="form-group">
                         {% csrf_token %}
-                        <label for="funcion">Funcion</label>
+                        <label for="funcion">Funcion F</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="funcion" 
+                                name="funcion-F" 
+                                placeholder="Example input">
+
+                        <label for="funcion">Funcion G</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="funcion-G"  
+                                placeholder="Example input">
+
+                        <label for="funcion">Valor inicial (x0)</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="vInicial" 
                                 placeholder="Example input">
 
                         <label for="funcion">Tolerancia</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="tolerancia"  
+                                name="tolerancia" 
                                 placeholder="Example input">
 
                         <label for="funcion">Iteraciones</label>
                         <input type="text" 
                                 class="form-control" 
                                 name="iteraciones" 
-                                placeholder="Example input">
-
-                        <label for="funcion">Valor de intervalo (a)</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="xs" 
-                                placeholder="Example input">
-
-                        <label for="funcion">Valor de intervalo (b)</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="xi" 
                                 placeholder="Example input">
                         
                         
@@ -63,24 +63,24 @@
         <table class="table">
             <thead class="thead-dark">
                 <tr>
-                    {%for i in data.columns %}
+                    <!-- {%for i in data.columns %}
                     <th scope="col">
                         <h3>{{i}}</h3>
                     </th>
-                    {% endfor %}
+                    {% endfor %} -->
                 </tr>
             </thead>
             <tbody>
-                {%for dato in data.results %}
+                <!-- {%for dato in data.results %}
                 <tr>
                     {%for valores in dato %}
                     <td>{{valores}}</td>
                     {% endfor %}
                 </tr>
-                {% endfor %}
+                {% endfor %} -->
             </tbody>
         </table>
-        <h4>{{data.root}} es una aproximacion de un raiz de f(x) con una tolerancia</h4>
+<!--         <h4>{{data.root}} es una aproximacion de un raiz de f(x) con una tolerancia</h4>-->    
     </div>
 </div>
 

@@ -10,24 +10,18 @@ from numpy.lib import scimath
 from sympy import sympify, diff, evalf, Abs, Symbol, Subs
 from scipy import linalg
 
-def biseccion(fx, tol, niter, xs, xi):
+def biseccion(fx, Tol, Niter, Xs, Xi):
 
     output = {
         "type": 1,
-        "columns": ["iter","xm","f(xm)","E" ],
-        "iterations": niter,
+        "columns": ["N","xm","F(xm)","E" ],
         "errors": list()
     }
 
     datos = list()
-
     x = sympy.Symbol('x')
-
     Fun = sympy.sympify(fx, convert_xor=True)
-    Tol = float(tol)
-    Niter = int(niter)
-    Xs = float(xs)
-    Xi = float(xi)
+
 
     fm = []
     E = []
@@ -77,8 +71,8 @@ def biseccion(fx, tol, niter, xs, xi):
             Xms.append(xAux)
 
             # Se guardan los datos            
-            datos.append([iter, Xms, fm, E])
-
+        
+        datos.append([iter, Xms, fm, E])
 
         if fe == 0:
             s = xAux
@@ -95,20 +89,31 @@ def biseccion(fx, tol, niter, xs, xi):
         else:
             s = xAux
             print("Fracaso en ", Niter, " iteraciones ")
+            return 
 
     else:
         print("El intervalo es inadecuado")
 
 
-def puntoFijo(X0, Tol, Niter, Fun, g):
+def puntoFijo(X0, Tol, Niter, fx, gx):
 
+    output = {
+        "type": 1,
+        "columns": ["N","xi","F(xi)", "G(xi)", "E" ],
+        "errors": list()
+    }
+
+    datos = list()
+    x = sympy.Symbol('x')
+    Fun = sympy.sympify(fx, convert_xor=True)
+    GFun = sympy.sympify(gx, convert_xor=True) 
 
     fn = []
     xn = []
     E = []
     N = []
-    x = X0
-    f = eval(Fun)
+    xi = X0
+    f = Fun.evalf(subs={x: X0})
     c = 0
     Error = 100
 
@@ -117,26 +122,26 @@ def puntoFijo(X0, Tol, Niter, Fun, g):
     E.append(Error)
     N.append(c)
     while Error > Tol and f != 0 and c < Niter:
-        x = eval(g)
-        fe = eval(Fun)
+        xi = GFun.evalf(subs={x: xi})
+        fe = Fun.evalf(subs={x: xi})
         fn.append(fe)
-        xn.append(x)
+        xn.append(xi)
         c = c+1
         Error = abs(xn[c]-xn[c-1])
         N.append(c)
         E.append(Error)
     if fe == 0:
-        s = x
+        s = xi
         print(s, "es raiz de f(x)")
     elif Error < Tol:
-        s = x
+        s = xi
         print(s, "es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
         print("N", N)
         print("xn", xn)
         print("fn", fn)
         print("Error", E)
     else:
-        s = x
+        s = xi
         print("Fracaso en ", Niter, " iteraciones ")
 
 
