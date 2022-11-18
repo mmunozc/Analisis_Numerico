@@ -160,7 +160,7 @@ def newton(X0, Tol, Niter, fx, df):
 
     output = {
         "type": 1,
-        "columns": ["N","xi","F(xi)", "G(xi)", "E" ],
+        "columns": ["N","xi","F(xi)", "E" ],
         "errors": list()
     }
 
@@ -181,7 +181,7 @@ def newton(X0, Tol, Niter, fx, df):
     c = 0
     Error = 100
     fn.append(f)
-    xn.append(x)
+    xn.append(xi)
     E.append(Error)
     N.append(c)
 
@@ -196,7 +196,7 @@ def newton(X0, Tol, Niter, fx, df):
         derf.append(derivada)
         N.append(c)
         E.append(Error)
-    datos.append([N, xn, fn, derf, E])
+    datos.append([N, xn, fn, E])
     if f == 0:
         s = xi
         print(s, "es raiz de f(x)")
@@ -207,6 +207,10 @@ def newton(X0, Tol, Niter, fx, df):
         print("xn", xn)
         print("fn", fn)
         print("Error", E)
+        
+        output["results"] = datos
+        output["root"] = s
+        return output
     else:
         s = xi
         print("Fracaso en ", Niter, " iteraciones ")
