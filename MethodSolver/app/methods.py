@@ -158,3 +158,26 @@ def newton(X0, Tol, Niter, Fun, df):
     else:
         s=x
         print("Fracaso en ",Niter, " iteraciones ")
+
+def reglaFalsa(Xi, Xf, Niter, Tol, Fun):
+    #iniciar variables
+    solucion=None
+    contador=0
+    error=101
+    #Evaluar si la raiz esta dentro del intervalo
+    if Fun(Xi)*Fun(Xf)<=0:
+        while contador <= Niter and error >= Tol:
+            contador +=1
+            solucion= Xf-((Fun(Xf)*(Xf-Xi))/(Fun(Xf)-Fun(Xi)))
+            error=abs((solucion-Xi)/solucion)*100
+            #redeefinir el nuevo intervalo
+            if Fun(Xi)*Fun(solucion)>=0:
+                Xi=solucion
+            else:
+                Xf=solucion
+        print(solucion)
+        print(contador)
+        print(error)
+    else:
+        print("no hay solucion")
+
