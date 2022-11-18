@@ -24,9 +24,10 @@ urlpatterns = [
     path('biseccion', views.biseccionView, name="biseccion"),
     path('puntoFijo', views.puntoFijoView, name="puntoFijo"),
     path('newton', views.newtonView, name="newton"),
-    path('reglaFalsa', views.reglaFalsa, name="reglaFalsa"),
-    #path('gausspiv', views.menu, name="gausspiv"),
+    path('reglaFalsa', views.reglaFalsaView, name="reglaFalsa"),
+    path('raphson', views.raphsonView, name="raphson"),
     #path('secante', views.menu, name="secante"),
+    #path('gausspiv', views.menu, name="gausspiv"),
     #path('taylorcos', views.menu, name="taylorcos"),
     #path('taylorsen', views.menu, name="taylorsen"),
 

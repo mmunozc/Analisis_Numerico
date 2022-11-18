@@ -33,12 +33,15 @@ def biseccionView(request):
 
     return render(request, './metodosPage/biseccion.html')
 
+#def luDirectaView(request):
+
+
 
 def puntoFijoView(request):
     datos = ()
     if request.method == 'POST':
         fx = request.POST["funcion-F"]
-        gx = request.POST["funcion-G"]
+        gx = request.POST["funcion-f-prima"]
 
         x0 = request.POST["vInicial"]
         X0 = float(x0)
@@ -81,5 +84,52 @@ def newtonView(request):
     return render(request, './metodosPage/newton.html')
 
 
-def reglaFalsa(request):
+def reglaFalsaView(request):
+    datos = ()
+    if request.method == 'POST':
+        fx = request.POST["funcion"]
+
+        x0 = request.POST["lowerinterval"]
+        X0 = float(x0)
+
+        xi = request.POST["higherinterval"]
+        Xi = float(xi)
+
+        tol = request.POST["tolerancia"]
+        Tol = float(tol)
+
+        niter = request.POST["iteraciones"]
+        Niter = int(niter)
+
+        datos = reglaFalsa(X0, Xi, Niter, Tol, fx)
+        
+    
+    if datos: 
+        return render(request, './metodosPage/reglaFalsa.html', {'data': datos})
+    
     return render(request, './metodosPage/reglaFalsa.html')
+
+def raphsonView(request):
+    datos = ()
+    if request.method == 'POST':
+        f = request.POST["funcion-F"]
+        fp = request.POST["funcion-F-prima"]
+
+        xi = request.POST["vInicial"]
+        Xi = float(xi)
+
+        tol = request.POST["tolerancia"]
+        Tol = float(tol)
+
+        niter = request.POST["iteraciones"]
+        Niter = int(niter)
+
+
+
+        datos = raphson(f, fp, Xi, Tol ,Niter)
+    
+    if datos: 
+        return render(request, './metodosPage/raphson.html', {'data': datos})
+
+
+    return render(request, './metodosPage/raphson.html')

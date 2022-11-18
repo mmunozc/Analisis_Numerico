@@ -1,6 +1,4 @@
-{% extends 'layout.html' %}
-
-
+{% extends "layout.html" %}
 
 {% block content %}
 
@@ -8,7 +6,7 @@
 <div class="info">
     <br>
     <br>
-    <h1>Metodo Regla False</h1>
+    <p>Metodo Raphson</p>
 </div>
 
 
@@ -21,22 +19,22 @@
                 <form method="post">
                     <div class="form-group">
                         {% csrf_token %}
-                        <label for="funcion">Funcion</label>
+                        <label for="funcion">Funcion F</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="funcion" 
+                                name="funcion-F" 
                                 placeholder="Example input">
 
-                        <label for="funcion">Valor de intervalo (a)</label>
+                        <label for="funcion">Funcion F prima</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="lowerinterval"  
+                                name="funcion-F-prima"  
                                 placeholder="Example input">
 
-                        <label for="funcion">Valor de intervalo (b)</label>
+                        <label for="funcion">Valor inicial (x0)</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="higherinterval" 
+                                name="vInicial" 
                                 placeholder="Example input">
 
                         <label for="funcion">Tolerancia</label>

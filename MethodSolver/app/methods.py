@@ -180,6 +180,7 @@ def newton(X0, Tol, Niter, fx, df):
     derivada = DerF.evalf(subs={x: X0})
     c = 0
     Error = 100
+
     fn.append(f)
     xn.append(xi)
     E.append(Error)
@@ -196,7 +197,9 @@ def newton(X0, Tol, Niter, fx, df):
         derf.append(derivada)
         N.append(c)
         E.append(Error)
+        
     datos.append([N, xn, fn, E])
+    
     if f == 0:
         s = xi
         print(s, "es raiz de f(x)")
@@ -216,24 +219,120 @@ def newton(X0, Tol, Niter, fx, df):
         print("Fracaso en ", Niter, " iteraciones ")
 
 
-def reglaFalsa(Xi, Xf, Niter, Tol, Fun):
+#Arreglar da 101 iteraciones
+def reglaFalsa(Xi, Xf, Niter, Tol, fx):
+
+    output = {
+        "type": 1,
+        "columns": ["N","xm","F(xm)", "E" ],
+        "errors": list()
+    }
+
+    datos = list()
+    x = sympy.Symbol('x')
+    Fun = sympy.sympify(fx, convert_xor=True)
+
+    fn = []
+    xm = []
+    E = []
+    N = []
+
+    fxi = Fun.evalf(subs={x: Xi})
+    fxf = Fun.evalf(subs={x: Xf})
+
     # iniciar variables
     solucion = None
-    contador = 0
-    error = 101
+    c = 0
+    error = 1.000000
+
+    fn.append(fxi)
+    xm.append(Xi)
+    E.append(error)
+    N.append(c)
+
     # Evaluar si la raiz esta dentro del intervalo
-    if Fun(Xi)*Fun(Xf) <= 0:
-        while contador <= Niter and error >= Tol:
-            contador += 1
-            solucion = Xf-((Fun(Xf)*(Xf-Xi))/(Fun(Xf)-Fun(Xi)))
+    if fxi*fxf <= 0:
+        while c <= Niter and error >= Tol:
+            c += 1
+            solucion = (Xf-(fxf*(Xf-Xi))/(fxf-fxi))
             error = abs((solucion-Xi)/solucion)*100
             # redeefinir el nuevo intervalo
-            if Fun(Xi)*Fun(solucion) >= 0:
+            fxs = Fun.evalf(subs={x: solucion})
+            if fxi*fxs >= 0:
                 Xi = solucion
             else:
                 Xf = solucion
+        
+            fn.append(solucion)
+            xm.append(Xi)
+            E.append(error)
+            N.append(c)
         print(solucion)
-        print(contador)
-        print(error)
+        print(N)
+        print(E)
     else:
         print("no hay solucion")
+
+
+def secante(f, x1, x2, tol):
+    error = 1e3
+    n = 0
+    x3 = 0
+    while error > tol:
+        x3 = x-((x2-x1)/(f(x2)-f(x1)))*f(x1)
+        x1=x2
+        x2=x3
+        error = abs(f(x3))
+        n+=1
+    pass
+
+
+def raphson(f, fp ,xi ,tol ,Niter):
+
+    datos = list()
+    x = sympy.Symbol('x')
+    Fun = sympy.sympify(f, convert_xor=True)
+    FunP = sympy.sympify(fp, convert_xor=True)
+    
+    fx = Fun.evalf(subs={x: xi})
+    fxp = FunP.evalf(subs={x: xi})
+
+    fxi = []
+    Xi = []
+    E = []
+    N = []
+    
+    for k in range(Niter):
+        xold=xi
+        xi=xi-fx/fxp
+        e=abs((xi-xold)/xi)
+        if e < tol:
+            break
+        #datos.append(k, xi, fx, e)
+        fxi.append(xold)
+        Xi.append(xi)
+        E.append(e)
+        N.append(k)
+    
+    print(E)
+
+def luDirecta(n, a):
+    matriz=a
+    datos=list()
+    u=np.zeros([n,n])
+    l=np.zeros([n,n])
+    
+#operacion para hacer 0 debajo de la diagonal
+    for k in range(0,n):
+        for r in range(0,n):
+            if k==r:
+                l[k,r]=1
+            if k<r:
+                factor=(matriz[r,k]/matriz[k,k])
+                l[k,r]=factor
+                for c in range(0,n):
+                    matriz[r,c]=matriz[r,c]-(factor*matriz[k,c])
+                    u[r,c]=matriz[r,c]
+    datos.append([l, u])
+    return datos
+            
