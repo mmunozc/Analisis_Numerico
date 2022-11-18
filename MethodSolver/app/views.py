@@ -20,12 +20,13 @@ def biseccionView(request):
         niter = request.POST["iteraciones"]
         xs = request.POST["xs"]
         xi = request.POST["xi"]
+
         datos = biseccion(fx, tol, niter, xs, xi)
         print(datos)
 
     if datos:
         print("dentro del if", datos)
-        return render(request, './metodosPage/biseccion.html', {'list': datos})
+        return render(request, './metodosPage/biseccion.html', {'data': datos})
     
 
     return render(request, './metodosPage/biseccion.html')
