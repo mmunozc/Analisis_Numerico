@@ -95,6 +95,29 @@ def biseccion(fx, Tol, Niter, Xs, Xi):
         print("El intervalo es inadecuado")
 
 
+
+#funcional
+def pivParcial(a,b):
+    datos=list()
+    ab=np.concatenate((a,b), axis=1)
+    #pivoteo por fila parcial
+    tamano=np.shape(ab)
+    n=tamano[0]
+    m=tamano[1]
+
+    for i in range(0, n-1, 1):
+        columna=abs(ab[i:,i])
+        dondemax=np.argmax(columna)
+        #intercambio de fila
+        if dondemax!=0:
+            temporal=np.copy(ab[i,:])
+            ab[i,:]=ab[dondemax+i, :]
+            ab[dondemax,:]=temporal
+    datos.append(ab)
+    return datos
+
+
+
 def puntoFijo(X0, Tol, Niter, fx, gx):
 
     output = {
@@ -316,11 +339,16 @@ def raphson(f, fp ,xi ,tol ,Niter):
     
     print(E)
 
+#funcional
 def luDirecta(n, a):
     matriz=a
     datos=list()
     u=np.zeros([n,n])
     l=np.zeros([n,n])
+
+    for r in range(0, n):
+        for c in range(0, n):
+            u[r][c]=matriz[r][c]
     
 #operacion para hacer 0 debajo de la diagonal
     for k in range(0,n):
@@ -328,11 +356,13 @@ def luDirecta(n, a):
             if k==r:
                 l[k,r]=1
             if k<r:
-                factor=(matriz[r,k]/matriz[k,k])
-                l[k,r]=factor
+                factor=(matriz[r][k]/matriz[k][k])
+                l[r][k]=factor
                 for c in range(0,n):
-                    matriz[r,c]=matriz[r,c]-(factor*matriz[k,c])
-                    u[r,c]=matriz[r,c]
+                    matriz[r][c]=matriz[r][c]-(factor*matriz[k][c])
+                    u[r][c]=matriz[r][c]
     datos.append([l, u])
+    #l=np.transpose(l)
+    #u=np.transpose(u)
     return datos
             

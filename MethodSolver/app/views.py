@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
+import numpy as np
 from app.methods import *
 # Create your views here.
 
@@ -11,6 +11,19 @@ def infoView(request):
 
 def menuView(request):
     return render(request, 'metodosMenu.html')
+
+def luDirectaView(request):
+    datos=()
+    matriz=[]
+    if request.method=='POST':
+        tamañoMatriz=request.POST["tamañoArreglo"]
+        matriz=np.zeros((tamañoMatriz, tamañoMatriz))
+        for i in range(tamañoMatriz):
+            for j in range(tamañoMatriz):
+                matriz[i][j]=request.POST[[i][j]]
+    print(matriz)
+
+    return render(request, './metodosPage/luDirecta.html')
 
 
 def biseccionView(request):
