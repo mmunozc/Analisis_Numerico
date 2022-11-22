@@ -6,7 +6,7 @@
 <div class="info">
     <br>
     <br>
-    <p>Metodo Raphson</p>
+    <h1>Método de secante</h1>
 </div>
 
 
@@ -19,34 +19,34 @@
                 <form method="post">
                     <div class="form-group">
                         {% csrf_token %}
-                        <label for="funcion">Funcion F</label>
+                        <label for="funcion">Funcion</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="funcion-F" 
-                                placeholder="Example input">
-
-                        <label for="funcion">Funcion F prima</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="funcion-F-prima"  
-                                placeholder="Example input">
-
-                        <label for="funcion">Valor inicial (x0)</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="vInicial" 
+                                name="funcion" 
                                 placeholder="Example input">
 
                         <label for="funcion">Tolerancia</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="tolerancia" 
+                                name="tolerancia"  
                                 placeholder="Example input">
 
                         <label for="funcion">Iteraciones</label>
                         <input type="text" 
                                 class="form-control" 
                                 name="iteraciones" 
+                                placeholder="Example input">
+
+                        <label for="funcion">Valor de intervalo (a)</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="xs" 
+                                placeholder="Example input">
+
+                        <label for="funcion">Valor de intervalo (b)</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="xi" 
                                 placeholder="Example input">
                         
                         
@@ -80,7 +80,7 @@
                 {% endfor %}
             </tbody>
         </table>
-<!--         <h4>{{data.root}} es una aproximacion de un raiz de f(x) con una tolerancia</h4>-->    
+        <h4>{{data.root}} es una aproximacion de un raiz de f(x) con una tolerancia</h4>
     </div>
 </div>
 

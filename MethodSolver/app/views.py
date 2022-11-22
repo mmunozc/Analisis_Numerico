@@ -48,6 +48,25 @@ def biseccionView(request):
 
 #def luDirectaView(request):
 
+def secanteView(request):
+    datos = ()
+    if request.method == 'POST':
+        fx = request.POST["funcion"]
+        tol = request.POST["tolerancia"]
+        Tol = float(tol)
+        niter = request.POST["iteraciones"]
+        Niter = int(niter)
+        xs = request.POST["xs"]
+        Xs = float(xs)
+        xi = request.POST["xi"]
+        Xi = float(xi)
+
+        datos = biseccion(fx, Tol, Niter, Xs, Xi)
+
+    if datos:
+        return render(request, './metodosPage/secante.html', {'data': datos})
+
+    return render(request, './metodosPage/secante.html')
 
 
 def puntoFijoView(request):
@@ -121,28 +140,3 @@ def reglaFalsaView(request):
         return render(request, './metodosPage/reglaFalsa.html', {'data': datos})
     
     return render(request, './metodosPage/reglaFalsa.html')
-
-def raphsonView(request):
-    datos = ()
-    if request.method == 'POST':
-        f = request.POST["funcion-F"]
-        fp = request.POST["funcion-F-prima"]
-
-        xi = request.POST["vInicial"]
-        Xi = float(xi)
-
-        tol = request.POST["tolerancia"]
-        Tol = float(tol)
-
-        niter = request.POST["iteraciones"]
-        Niter = int(niter)
-
-
-
-        datos = raphson(f, fp, Xi, Tol ,Niter)
-    
-    if datos: 
-        return render(request, './metodosPage/raphson.html', {'data': datos})
-
-
-    return render(request, './metodosPage/raphson.html')

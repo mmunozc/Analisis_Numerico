@@ -1,5 +1,5 @@
 import sympy as sympy
-
+from sympy import Symbol, sympify,evalf
 
 from sympy.abc import x
 import pandas as pd
@@ -7,7 +7,6 @@ import math
 import numpy as np
 import numpy.matlib
 from numpy.lib import scimath
-from sympy import sympify, diff, evalf, Abs, Symbol, Subs
 from scipy import linalg
 
 def biseccion(fx, Tol, Niter, Xs, Xi):
@@ -95,7 +94,6 @@ def biseccion(fx, Tol, Niter, Xs, Xi):
         print("El intervalo es inadecuado")
 
 
-
 #funcional
 def pivParcial(a,b):
     datos=list()
@@ -115,7 +113,6 @@ def pivParcial(a,b):
             ab[dondemax,:]=temporal
     datos.append(ab)
     return datos
-
 
 
 def puntoFijo(X0, Tol, Niter, fx, gx):
@@ -191,7 +188,6 @@ def newton(X0, Tol, Niter, fx, df):
     x = sympy.Symbol('x')
     Fun = sympy.sympify(fx, convert_xor=True)
     DerF = sympy.sympify(df, convert_xor=True) 
-
 
     fn = []
     xn = []
@@ -297,47 +293,8 @@ def reglaFalsa(Xi, Xf, Niter, Tol, fx):
         print("no hay solucion")
 
 
-def secante(f, x1, x2, tol):
-    error = 1e3
-    n = 0
-    x3 = 0
-    while error > tol:
-        x3 = x-((x2-x1)/(f(x2)-f(x1)))*f(x1)
-        x1=x2
-        x2=x3
-        error = abs(f(x3))
-        n+=1
+def secante(fx, Tol, Niter, Xs, Xi):
     pass
-
-
-def raphson(f, fp ,xi ,tol ,Niter):
-
-    datos = list()
-    x = sympy.Symbol('x')
-    Fun = sympy.sympify(f, convert_xor=True)
-    FunP = sympy.sympify(fp, convert_xor=True)
-    
-    fx = Fun.evalf(subs={x: xi})
-    fxp = FunP.evalf(subs={x: xi})
-
-    fxi = []
-    Xi = []
-    E = []
-    N = []
-    
-    for k in range(Niter):
-        xold=xi
-        xi=xi-fx/fxp
-        e=abs((xi-xold)/xi)
-        if e < tol:
-            break
-        #datos.append(k, xi, fx, e)
-        fxi.append(xold)
-        Xi.append(xi)
-        E.append(e)
-        N.append(k)
-    
-    print(E)
 
 #funcional
 def luDirecta(n, a):
