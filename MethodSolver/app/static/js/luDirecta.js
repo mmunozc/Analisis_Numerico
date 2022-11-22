@@ -4,13 +4,15 @@ const botonConfirmar=document.querySelector(".boton");
 
 var resultado=botonConfirmar.addEventListener("click", añadirTabla);
 
-const buscador=document.querySelector(".inputTamaño");
-const tamaño=buscador.value;
+
+function guardarVariable(variable){
+    var variableGuardada=variable;
+    return variableGuardada;
+}
 
 function añadirTabla(){
     const buscador=document.querySelector(".inputTamaño");
     const tamaño=buscador.value;
-    console.log(tamaño);
     buscador.setAttribute("hidden", true);
     const recuadro=document.querySelector(".card-body");
     const formulario=document.createElement('form');
@@ -36,15 +38,14 @@ function añadirTabla(){
     const botonDos=document.querySelector(".botonDos");
     botonDos.removeAttribute("hidden");
     var conversionTamaño=Number(tamaño);
-    console.log(typeof conversionTamaño);
-    
+
     var matrizPag= new Array(conversionTamaño);
     for (var i=0; i<matrizPag.length; i++){
         matrizPag[i]=new Array(conversionTamaño);
     }
-    console.log(matrizPag);
 
 }
+console.log(tamaño);
 const botonDos=document.querySelector(".botonDos");
 botonDos.addEventListener("click", obtenerDatos);
 
