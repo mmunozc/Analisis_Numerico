@@ -154,13 +154,13 @@ def raicesMultiplesView(request):
         X0 = request.POST["x0"]
         X0 = float(X0)
 
-        N = request.POST["iteraciones"]
-        N = int(N)
+        niter = request.POST["iteraciones"]
+        Niter = int(niter)
 
         Tol = request.POST["tolerancia"]
         Tol = float(Tol)
 
-        datos = raicesMultiples(Fx,X0,Tol,N)
+        datos = raicesMultiples(Fx,X0,Tol,Niter)
         Errors = datos["errors"]
 
     if datos:
@@ -169,4 +169,51 @@ def raicesMultiplesView(request):
     return render(request, './metodosPage/raicesMultiples.html')
 
 def jacobiSeidelView(request):
-    return render(request, 'jacobi-gaussSeidel.html')
+    datos = ()
+    if request.method == 'POST':
+        mA = toMatrix(request.POST["matrizA"])
+        Vx0 = toVector(request.POST["vectorX0"])
+        Vb = toVector(request.POST["vectorB"])
+
+        iter = request.POST["iteraciones"]
+        Niter = int(iter)
+
+        Tol = request.POST["tolerancia"]
+        Tol = float(Tol)
+
+
+        datos =  jacobi(mA,Vb,Vx0,Tol, Niter)
+
+    if datos:
+        return render(request, "./metodosPage/jacobi-gaussSeidel.html", {"data":datos})
+
+    return render(request, './metodosPage/jacobi-gaussSeidel.html')
+
+
+
+
+
+
+
+
+
+#Metodos auxiliar
+def toMatrix(matrixStr):
+    matrixStr = matrixStr.replace(" ","")
+    matrixStr = matrixStr.replace("\n","")
+    rows = matrixStr.split(";")
+    auxM = []
+    for row in rows:
+        splitedRow = row.split(",")
+        auxR = []
+        for num in splitedRow:
+            auxR.append(float(num))
+        auxM.append(auxR)
+    return auxM
+
+def toVector(vectorStr):
+    splitedVector = vectorStr.split(",")
+    auxV = list()
+    for num in splitedVector:
+        auxV.append(float(num))
+    return auxV
