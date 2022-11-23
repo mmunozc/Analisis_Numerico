@@ -388,6 +388,8 @@ def raicesMultiples(fx, x0, tol, niter):
     output["root"] = xA
     return output
 
+def jacobi(Ma, Vb, x0, tol, niter):
+    pass
 
 # funcional
 def luDirecta(n, a):
