@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<div class="info">
+    <br>
+    <br>
+    <h1>Método de Gauss Seidel</h1>
+</div>
+
+
+
+<div class="row mt-5 mb-10">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ingrese sus datos</h5>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <label for="funcion">Matriz A</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="matrizA" 
+                                placeholder="Example input">
+
+                        <label for="funcion">Vector X0</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="vectorX0"  
+                                placeholder="Example input">
+
+                        <label for="funcion">Vector B</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="vectorB" 
+                                placeholder="Example input">
+
+                        <label for="funcion">Tolerancia</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="tolerancia" 
+                                placeholder="Example input">
+
+<!--                         <label for="funcion">Valor norma</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="norma" 
+                                placeholder="Example input"> -->
+
+                        <label for="funcion">Iteraciones</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="iteraciones" 
+                                placeholder="Example input">
+
+                        <button type="submit" class="btn btn-outline-secondary" >Evaluar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!-- TODO: CUADRAR LA TABLA -->
+
+    <div class="col-5">
+        <h2>Solucion</h2>
+        {% for j in output.t %}
+        <div class="card" style="margin: 10pt 0;">
+            <div class="card-body">
+                <pre class="h5">{{j}}</pre>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

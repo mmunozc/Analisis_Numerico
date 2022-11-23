@@ -2,6 +2,7 @@ import sympy as sympy
 from sympy import Symbol, sympify, Abs, diff
 from sympy.abc import x
 import numpy as np
+from scipy import linalg
 
 
 def biseccion(fx, Tol, Niter, a, b):
@@ -403,24 +404,169 @@ def jacobi(Ma, Vb, x0, tol, niter):
     print(x0)
     print(Vb)
 
-# funcional
-def sor(a, b, x0, w, tol, niter):
-    tamañoX0=x0.size
-    xA=np.zeros((tamañoX0, 1))
-    A=np.matrix(a)
-    B=np.array(b)
+    output = {        
+        "type": 4,
+        "method": "Jacobi's Method",
+        "iterations": niter,
+        "errors": list(),
+    }
 
-    tamañoB=b.size
-    B=np.reshape(b, (tamañoB, 1))
+    sX = np.size(x0)
+    xA = np.zeros((sX,1))
 
-    diagonal=np.diag(np.diag(A))
-    L=-1*np.tril(A)+diagonal
-    U=-1*mp.triu(A)+diagonal
-    t=np.linalg.inv(diagonal-(w*L))@(((1-w)*diagonal)+(w*U))
-    c=(w*np.linalg.inv(diagonal-(w*L)))@ b
+    A = np.matrix(Ma)
 
-    xP=x0
-    error=1000
-    cont=0
+    b = np.array(Vb)
+    s = b.size
+    b = np.reshape(b,(s,1))
+
+    D = np.diag(np.diag(A))
+    L = -1*np.tril(A)+D
+    U = -1*np.triu(A)+D
+    LU = L+U
+
+    T = np.linalg.inv(D) @ LU
+    C = np.linalg.inv(D) @ b
+
+
+    output["t"] = T 
+    output["c"]= C
+
+    print(T)
+    print(C)
+    return output
+
+def gaussSeidel(Ma, Vb, x0, tol, niter):
+    output = {
+        "type": 4,
+        "method": "Gauss-Seidel's Method",
+        "iterations": niter
+    }
     
+    sX = np.size(x0)
+    xA = np.zeros((sX,1))
+    
+    A = np.matrix(Ma)
+    
+    b = np.array(Vb)
+    s = b.size
+    b = np.reshape(b,(s,1))
+
+    D = np.diag(np.diag(A))
+    L = -1*np.tril(A)+D
+    U = -1*np.triu(A)+D
+    
+    T = np.linalg.inv(D-L) @ U
+    C = np.linalg.inv(D-L) @ b
+    
+    xP = x0
+    E = 1000
+    cont = 0
+
+    steps = {'Step 0': np.copy(xA)}
+    while(E > tol and cont < niter  ):
+        xA = T@xP + C
+        E = np.linalg.norm(xP - xA)
+        xP = xA
+        cont = cont + 1
+        steps[f'Step {cont+1}'] = np.copy(xA)
+
+    niter = cont
+    error = E
+
+    print("T", T)
+    print("C", C)
+    print("steps", steps)
+
+def splineLineal(X,Y):
+    output = {
+        "type": 8,
+        "method": "Linear Tracers",
+        "errors" : list()
+    }
+    X = np.array(X)
+    Y = np.array(Y)
+    n = X.size
+    m = 2*(n-1)
+    A = np.zeros((m,m))
+    b = np.zeros((m,1))
+    Coef = np.zeros((n-1,2))
+    i = 0
+    #Interpolating condition
+    try:
+        while i < X.size-1:
+            A[i+1,[2*i+1-1,2*i+1]]= [X[i+1],1] 
+            b[i+1]=Y[i+1]
+            i = i+1
+
+        A[0,[0,1]] = [X[0],1] 
+        b[0] = Y[0]
+        i = 1
+        #Condition of continuity
+        while i < X.size-1:
+            A[X.size-1+i,2*i-2:2*i+2] = np.hstack((X[i],1,-X[i],-1))
+            b[X.size-1+i] = 0
+            i = i+1
+
+        Saux = linalg.solve(A,b)
+        #Order Coefficients
+        i = 0
+        while i < X.size-1:
+            Coef[i,:] = [Saux[2*i],Saux[2*i+1]]
+            i = i+1
+        
+    except BaseException as e:  
+        output["errors"].append("Error in data: " + str(e))
+        return output
+    
+    output["results"] = Coef
+    return output
+
+# funcional
+def sor(Ma, Vb, x0, w, tol, niter):
+    output = {
+        "type": 4,
+        "method": "SOR(Relaxation) Method",
+        "iterations": niter
+    }
+    
+    sX = np.size(x0)
+    xA = np.zeros((sX,1))
+    
+    A = np.matrix(Ma)
+    
+    b = np.array(Vb)
+    s = b.size
+    b = np.reshape(b,(s,1))
+
+    D = np.diag(np.diag(A))
+    L = -1*np.tril(A)+D
+    U = -1*np.triu(A)+D
+    
+    T = np.linalg.inv(D-(w*L)) @ (((1-w)*D)+(w*U))
+    C = (w*np.linalg.inv(D-(w*L))) @ b
+    
+    xP = x0
+    E = 1000
+    cont = 0
+    steps = {'Step 0': np.copy(xA)}
+    while(E > tol and cont < niter):
+        xA = T@xP + C
+        E = np.linalg.norm(xP - xA)
+        xP = xA
+        cont = cont + 1
+        steps[f'Step {cont+1}'] = np.copy(xA)
+
+    nIter = cont
+    error = E
+    
+    output["results"] = steps
+    output["E"] = error
+    output["Iteration"] = nIter
+    
+    print(T)
+    print(C)
+    print("steps", steps)
+    
+    return output
 

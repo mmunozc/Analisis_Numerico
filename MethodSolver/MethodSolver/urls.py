@@ -21,6 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.infoView, name="infoView"),
     path('menu', views.menuView, name="menuView"),
+    path('iterativeMethods', views.iterativeMethodsView, name="iterativeMethodsView"),
+    path('splineMethods', views.splineMethodsView, name="splineMethodsView"),
     path('grafica', views.graficaView, name="graficaView"),
     path('biseccion', views.biseccionView, name="biseccion"),
     path('secante', views.secanteView, name="secante"),
@@ -29,6 +31,10 @@ urlpatterns = [
     path('reglaFalsa', views.reglaFalsaView, name="reglaFalsa"),
     path('luDirecta', views.luDirectaView, name='luDirecta'),
     path('raicesMultiples', views.raicesMultiplesView, name='raicesMultiples'),
-    path('jacobi-gSeidel', views.jacobiSeidelView, name='jacobi-gSeidel'),
-
+    path('jacobi', views.jacobiSeidelView, name='jacobi'),
+    path('gaussSeidel', views.gaussSeidelView, name='gaussSeidel'),
+    path('sor', views.sorView, name='sor'),
+    path('splineLineal', views.splineLinealView, name='splineLineal'),
+    path('splineCuadratica', views.splineCuadraticaView, name='aplineCuadratica'),
+    path('splineCubica', views.splineCubicaView, name='splineCubica'),
 ]

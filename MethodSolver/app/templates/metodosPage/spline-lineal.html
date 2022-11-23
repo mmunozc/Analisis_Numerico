@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<div class="info">
+    <br>
+    <br>
+    <h1>Método Lineal</h1>
+</div>
+
+
+
+<div class="row mt-5 mb-10">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ingrese sus datos</h5>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon3">X</sub> </span>
+                                    </div>
+                                    <input type="text" class="form-control" name="x" aria-describedby="basic-addon3"
+                                        required>
+                                    <div class="invalid-feedback">
+                                        Insert valid value
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon3">Y</sub> </span>
+                                    </div>
+                                    <input type="text" class="form-control" name="y" aria-describedby="basic-addon3"
+                                        required>
+                                    <div class="invalid-feedback">
+                                        Insert valid value
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-outline-secondary">Evaluar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resultado -->
+
+    <div class="col-5">
+
+        {% if coef %}
+        <table class="table">
+            <thead class="thead-dark">
+                <h3>Coefficients</h3>
+                <tr>
+                    <th scope="col">VALUES </th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for i in coef %}
+                <tr>
+                    <td>
+                        <h4>{{i}}</h4>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <table class="table">
+            <thead>
+                <h3>Polynomial</h3>
+                <tr>
+                    <th scope="col">VALUES</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for i in tracers %}
+                <tr>
+                    <td>
+                        <h4>{{i}}</h4>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+
+    {% endblock %}

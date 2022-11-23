@@ -2,16 +2,20 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 import numpy as np
 from app.methods import *
+import numpy.matlib
 # Create your views here.
 
 
 def infoView(request):
     return render(request, 'home.html')
 
-
 def menuView(request):
     return render(request, 'metodosMenu.html')
 
+def iterativeMethodsView(request):
+    return render(request, './metodosPage/metodos-iterativos.html')
+def splineMethodsView(request):
+    return render(request, './metodosPage/metodos-spline.html')
 
 def graficaView(request):
     return render(request, 'grafica.html')
@@ -28,7 +32,6 @@ def luDirectaView(request):
     print(matriz)
 
     return render(request, './metodosPage/luDirecta.html')
-
 
 def biseccionView(request):
     datos = ()
@@ -50,8 +53,6 @@ def biseccionView(request):
 
     return render(request, './metodosPage/biseccion.html')
 
-#def luDirectaView(request):
-
 def secanteView(request):
     datos = ()
     if request.method == 'POST':
@@ -71,7 +72,6 @@ def secanteView(request):
         return render(request, './metodosPage/secante.html', {'data': datos})
 
     return render(request, './metodosPage/secante.html')
-
 
 def puntoFijoView(request):
     datos = ()
@@ -96,7 +96,6 @@ def puntoFijoView(request):
 
     return render(request, './metodosPage/puntoFijo.html')
 
-
 def newtonView(request):
     datos = ()
     if request.method == 'POST':
@@ -118,7 +117,6 @@ def newtonView(request):
         return render(request, './metodosPage/newton.html', {'data': datos})
     
     return render(request, './metodosPage/newton.html')
-
 
 def reglaFalsaView(request):
     datos = ()
@@ -145,7 +143,6 @@ def reglaFalsaView(request):
     
     return render(request, './metodosPage/reglaFalsa.html')
 
-
 def raicesMultiplesView(request):
     datos = ()
     if request.method == 'POST':
@@ -169,7 +166,7 @@ def raicesMultiplesView(request):
     return render(request, './metodosPage/raicesMultiples.html')
 
 def jacobiSeidelView(request):
-    datos = ()
+    datos = []
     if request.method == 'POST':
         mA = toMatrix(request.POST["matrizA"])
         Vx0 = toVector(request.POST["vectorX0"])
@@ -181,18 +178,88 @@ def jacobiSeidelView(request):
         Tol = request.POST["tolerancia"]
         Tol = float(Tol)
 
+        datos = jacobi(mA,Vb,Vx0,Tol, Niter)
 
-        datos =  jacobi(mA,Vb,Vx0,Tol, Niter)
+        if datos:
+            return render(request, "./metodosPage/jacobi.html", {"data":datos})
 
-    if datos:
-        return render(request, "./metodosPage/jacobi-gaussSeidel.html", {"data":datos})
+    return render(request, './metodosPage/jacobi.html')
 
-    return render(request, './metodosPage/jacobi-gaussSeidel.html')
+def gaussSeidelView(request):
+    datos = []
+    if request.method == 'POST':
+        mA = toMatrix(request.POST["matrizA"])
+        Vx0 = toVector(request.POST["vectorX0"])
+        Vb = toVector(request.POST["vectorB"])
+
+        niter = request.POST["iteraciones"]
+        Niter = int(niter)
+
+        Tol = request.POST["tolerancia"]
+        Tol = float(Tol)
+
+        datos = gaussSeidel(mA,Vb,Vx0,Tol, Niter)
+
+        if datos:
+            return render(request, "./metodosPage/gaussSeidel.html", {"data":datos})
+
+    return render(request, './metodosPage/gaussSeidel.html')
+
+def sorView(request):
+    datos = []
+    if request.method == 'POST':
+        mA = toMatrix(request.POST["matrizA"])
+        Vx0 = toVector(request.POST["vectorX0"])
+        Vb = toVector(request.POST["vectorB"])
+
+        w = request.POST["wValue"]
+        W = int(w)
+
+        niter = request.POST["iteraciones"]
+        Niter = int(niter)
+
+        Tol = request.POST["tolerancia"]
+        Tol = float(Tol)
+
+        datos = sor(mA,Vb,Vx0,W,Tol, Niter)
+
+        if datos:
+            return render(request, "./metodosPage/sor.html", {"data":datos})
+
+    return render(request, './metodosPage/sor.html')
+
+def splineLinealView(request):
+    if request.method == 'POST':
+        x = request.POST["x"]
+        X = x.split(",")
+        X = [float(i) for i in X]
+        y = request.POST["y"]
+        Y = y.split(",")
+        Y = [float(i) for i in Y]
+        
+        output = splineLineal(X,Y)
+    
+        Coef = ""
+        Tracers = ""
+        Errors = output["errors"]
+
+        if(len(Errors)==0):    
+            Dic = outputTracers(output)
+            data = Dic.split("\n")
+            Coef = [data[7], data[8], data[9]]
+            Tracers = [data[12], data[13], data[14]]
+
+        return render(request, "./metodosPage/spline-lineal.html",{"coef":Coef, "tracers":Tracers ,"errors":Errors})
+
+    return render(request, "./metodosPage/spline-lineal.html")
 
 
+def splineCuadraticaView(request):
+    return render(request, "./metodosPage/spline-cuadratica.html")
 
 
-
+def splineCubicaView(request):
+    return render(request, "./metodosPage/spline-cubica.html")
 
 
 
@@ -212,8 +279,46 @@ def toMatrix(matrixStr):
     return auxM
 
 def toVector(vectorStr):
+
     splitedVector = vectorStr.split(",")
     auxV = list()
     for num in splitedVector:
         auxV.append(float(num))
     return auxV
+
+def outputTracers(output):
+    stringOutput = f'\n{output["method"]}\n'
+    stringOutput += "\nResults:\n"
+    stringOutput += "\nTracer coefficients:\n\n"
+    rel = output["results"]
+    i = 0
+    aux = rel.shape
+    while i < aux[0] :
+        j = 0
+        while j < aux[1]:
+            stringOutput += '{:^6f}'.format(rel[i,j]) +"  "
+            j += 1
+        i += 1
+        stringOutput += "\n"
+    stringOutput += "\n Tracers:\n"
+    i = 0
+    while i < aux[0] :
+        j = 0
+        if aux[1] == 2:
+            stringOutput += format(rel[i,0],"6f") +"x"
+            stringOutput += format(rel[i,1],"+.6f") 
+        elif aux[1] == 3:
+            stringOutput += format(rel[i,0],"6f") +"x^2"
+            stringOutput += format(rel[i,1],"+.6f") +"x"
+            stringOutput += format(rel[i,2],"+.6f")
+        elif aux[1] == 4:
+            stringOutput += format(rel[i,0],"6f") +"x^3"
+            stringOutput += format(rel[i,1],"+.6f") +"x^2"
+            stringOutput += format(rel[i,2],"+.6f") +"x"
+            stringOutput += format(rel[i,3],"+.6f")
+
+        i += 1
+        stringOutput += "\n"
+    stringOutput += "\n______________________________________________________________\n"
+
+    return stringOutput

@@ -6,7 +6,7 @@
 <div class="info">
     <br>
     <br>
-    <h1>Método de Jacobi</h1>
+    <h1>Método de Sor</h1>
 </div>
 
 
@@ -36,6 +36,12 @@
                                 class="form-control" 
                                 name="vectorB" 
                                 placeholder="Example input">
+                        
+                        <label for="funcion">Valor - W</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="wValue" 
+                                placeholder="Example input">
 
                         <label for="funcion">Tolerancia</label>
                         <input type="text" 
@@ -63,28 +69,16 @@
     </div>
 
 <!-- TODO: CUADRAR LA TABLA -->
+
     <div class="col-5">
         <h2>Solucion</h2>
-        <table class="table">
-            <thead class="thead-dark">
-                <tr>
-                    {%for i in data.columns %}
-                    <th scope="col">
-                        <h3>{{i}}</h3>
-                    </th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {%for dato in data.results %}
-                <tr>
-                    {%for valores in dato %}
-                    <td>{{valores}}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% for j in output.t %}
+        <div class="card" style="margin: 10pt 0;">
+            <div class="card-body">
+                <pre class="h5">{{j}}</pre>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 
