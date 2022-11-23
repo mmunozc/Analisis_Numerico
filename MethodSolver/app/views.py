@@ -167,3 +167,6 @@ def raicesMultiplesView(request):
         return render(request, "./metodosPage/raicesMultiples.html", {"data":datos, "errors": Errors})
 
     return render(request, './metodosPage/raicesMultiples.html')
+
+def jacobiSeidelView(request):
+    return render(request, 'jacobi-gaussSeidel.html')

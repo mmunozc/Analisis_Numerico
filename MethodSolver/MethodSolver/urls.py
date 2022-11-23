@@ -29,5 +29,6 @@ urlpatterns = [
     path('reglaFalsa', views.reglaFalsaView, name="reglaFalsa"),
     path('luDirecta', views.luDirectaView, name='luDirecta'),
     path('raicesMultiples', views.raicesMultiplesView, name='raicesMultiples'),
+    path('jacobi-gSeidel', views.jacobiSeidelView, name='jacobi-gSeidel'),
 
 ]
