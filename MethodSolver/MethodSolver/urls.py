@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.infoView, name="infoView"),
     path('menu', views.menuView, name="menuView"),
+    path('grafica', views.graficaView, name="graficaView"),
     path('biseccion', views.biseccionView, name="biseccion"),
     path('secante', views.secanteView, name="secante"),
     path('puntoFijo', views.puntoFijoView, name="puntoFijo"),
@@ -28,9 +29,5 @@ urlpatterns = [
     path('reglaFalsa', views.reglaFalsaView, name="reglaFalsa"),
     path('luDirecta', views.luDirectaView, name='luDirecta'),
     path('raicesMultiples', views.raicesMultiplesView, name='raicesMultiples'),
-    #path('secante', views.menu, name="secante"),
-    #path('gausspiv', views.menu, name="gausspiv"),
-    #path('taylorcos', views.menu, name="taylorcos"),
-    #path('taylorsen', views.menu, name="taylorsen"),
 
 ]

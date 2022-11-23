@@ -12,6 +12,10 @@ def infoView(request):
 def menuView(request):
     return render(request, 'metodosMenu.html')
 
+
+def graficaView(request):
+    return render(request, 'grafica.html')
+
 def luDirectaView(request):
     datos=()
     matriz=[]
