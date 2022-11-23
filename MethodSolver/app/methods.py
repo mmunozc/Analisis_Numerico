@@ -404,28 +404,23 @@ def jacobi(Ma, Vb, x0, tol, niter):
     print(Vb)
 
 # funcional
-def luDirecta(n, a):
-    matriz=a
-    datos=list()
-    u=np.zeros([n,n])
-    l=np.zeros([n,n])
+def sor(a, b, x0, w, tol, niter):
+    tamañoX0=x0.size
+    xA=np.zeros((tamañoX0, 1))
+    A=np.matrix(a)
+    B=np.array(b)
 
-    for r in range(0, n):
-        for c in range(0, n):
-            u[r][c]=matriz[r][c]
+    tamañoB=b.size
+    B=np.reshape(b, (tamañoB, 1))
+
+    diagonal=np.diag(np.diag(A))
+    L=-1*np.tril(A)+diagonal
+    U=-1*mp.triu(A)+diagonal
+    t=np.linalg.inv(diagonal-(w*L))@(((1-w)*diagonal)+(w*U))
+    c=(w*np.linalg.inv(diagonal-(w*L)))@ b
+
+    xP=x0
+    error=1000
+    cont=0
     
-# operacion para hacer 0 debajo de la diagonal
-    for k in range(0,n):
-        for r in range(0,n):
-            if k==r:
-                l[k,r]=1
-            if k<r:
-                factor=(matriz[r][k]/matriz[k][k])
-                l[r][k]=factor
-                for c in range(0,n):
-                    matriz[r][c]=matriz[r][c]-(factor*matriz[k][c])
-                    u[r][c]=matriz[r][c]
-    datos.append([l, u])
-    # l=np.transpose(l)
-    # u=np.transpose(u)
-    return datos
+

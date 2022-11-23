@@ -3,11 +3,11 @@ const botonConfirmar=document.querySelector(".boton");
 
 
 var resultado=botonConfirmar.addEventListener("click", añadirTabla);
-
+var tamañoGuardado;
 
 function guardarVariable(variable){
     var variableGuardada=variable;
-    return variableGuardada;
+    tamañoGuardado=variableGuardada;
 }
 
 function añadirTabla(){
@@ -30,7 +30,6 @@ function añadirTabla(){
             inputTabla.setAttribute("class", [i]+","+[j]);
             inputTabla.setAttribute("value", "1");
             divFilas.append(inputTabla);
-
         }
     }
 
@@ -43,11 +42,16 @@ function añadirTabla(){
     for (var i=0; i<matrizPag.length; i++){
         matrizPag[i]=new Array(conversionTamaño);
     }
-
+    guardarVariable(tamaño);
 }
-console.log(tamaño);
+
+var numeroConvertido=Number(tamañoGuardado);
+console.log(numeroConvertido);
+
+console.log(tamañoGuardado);
 const botonDos=document.querySelector(".botonDos");
 botonDos.addEventListener("click", obtenerDatos);
+
 
 
 function obtenerDatos(){
