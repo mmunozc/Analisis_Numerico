@@ -12,6 +12,10 @@ def infoView(request):
 def menuView(request):
     return render(request, 'metodosMenu.html')
 
+
+def graficaView(request):
+    return render(request, 'grafica.html')
+
 def luDirectaView(request):
     datos=()
     matriz=[]
@@ -56,12 +60,12 @@ def secanteView(request):
         Tol = float(tol)
         niter = request.POST["iteraciones"]
         Niter = int(niter)
-        xs = request.POST["xs"]
-        Xs = float(xs)
-        xi = request.POST["xi"]
-        Xi = float(xi)
+        X0 = request.POST["xs"]
+        x0 = float(X0)
+        X1 = request.POST["xi"]
+        x1 = float(X1)
 
-        datos = biseccion(fx, Tol, Niter, Xs, Xi)
+        datos = secante(fx, Tol, Niter, x0, x1)
 
     if datos:
         return render(request, './metodosPage/secante.html', {'data': datos})
@@ -73,7 +77,7 @@ def puntoFijoView(request):
     datos = ()
     if request.method == 'POST':
         fx = request.POST["funcion-F"]
-        gx = request.POST["funcion-f-prima"]
+        gx = request.POST["funcion-G"]
 
         x0 = request.POST["vInicial"]
         X0 = float(x0)
@@ -140,3 +144,29 @@ def reglaFalsaView(request):
         return render(request, './metodosPage/reglaFalsa.html', {'data': datos})
     
     return render(request, './metodosPage/reglaFalsa.html')
+
+
+def raicesMultiplesView(request):
+    datos = ()
+    if request.method == 'POST':
+        Fx = request.POST["funcion"]
+
+        X0 = request.POST["x0"]
+        X0 = float(X0)
+
+        N = request.POST["iteraciones"]
+        N = int(N)
+
+        Tol = request.POST["tolerancia"]
+        Tol = float(Tol)
+
+        datos = raicesMultiples(Fx,X0,Tol,N)
+        Errors = datos["errors"]
+
+    if datos:
+        return render(request, "./metodosPage/raicesMultiples.html", {"data":datos, "errors": Errors})
+
+    return render(request, './metodosPage/raicesMultiples.html')
+
+def jacobiSeidelView(request):
+    return render(request, 'jacobi-gaussSeidel.html')

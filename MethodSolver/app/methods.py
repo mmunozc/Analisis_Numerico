@@ -1,199 +1,147 @@
 import sympy as sympy
-from sympy import Symbol, sympify,evalf
-
+from sympy import Symbol, sympify, Abs, diff
 from sympy.abc import x
-import pandas as pd
-import math
-import numpy as np
-import numpy.matlib
-from numpy.lib import scimath
-from scipy import linalg
 
-def biseccion(fx, Tol, Niter, Xs, Xi):
+
+def biseccion(fx, Tol, Niter, a, b):
 
     output = {
         "type": 1,
-        "columns": ["N","xm","F(xm)","E" ],
+        "method": "Bisection",
+        "columns": ["iter", "a", "xm", "b", "f(xm)", "E"],
+        "iterations": Niter,
         "errors": list()
     }
 
     datos = list()
-    x = sympy.Symbol('x')
-    Fun = sympy.sympify(fx, convert_xor=True)
+    x = Symbol('x')
+    i = 1
+    cond = Tol
+    error = 1.0000000
 
+    Fun = sympify(fx)
 
-    fm = []
-    E = []
-    xAux = Xi
-    fi = Fun.evalf(subs={x: Xi})
-    xAux = Xs
-    fs = Fun.evalf(subs={x: Xs})
-    iter = []
-    Xms = []
+    ea = Fun.subs(x, a)
+    ea = ea.evalf()
 
-    if fi == 0:
-        s = Xi
-        E = 0
-        print(Xi, "es raiz de f(x)")
-    elif fs == 0:
-        s = Xs
-        E = 0
-        print(Xs, "es raiz de f(x)")
-    elif fs*fi < 0:
-        c = 0
-        Xm = (Xi+Xs)/2
-        xAux = Xm
-        fe = Fun.evalf(subs={x: xAux})
-        fm.append(fe)
-        E.append(100)
-        iter.append(c)
-        Xms.append(xAux)
+    xm0 = 0.0
+    ex_3 = 0
 
-        while E[c] > Tol and fe != 0 and c < Niter:
-            if fi*fe < 0:
-                Xs = Xm
-                xAux = Xs
-                fs = Fun.evalf(subs={x: xAux})
+    xm = (a + b)/2
+
+    ex_3 = Fun.subs(x, xm)
+    ex_3 = ex_3.evalf()
+
+    try:
+        datos.append([0, '{:^15.7f}'.format(a), '{:^15.7f}'.format(
+            xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(ex_3)])
+        while (error > cond) and (i < Niter):
+            if (ea*ex_3 < 0):
+                b = xm
             else:
-                Xi = Xm
-                xAux = Xi
-                fs = Fun.evalf(subs={x: xAux})
-            Xa = Xm
-            Xm = (Xi+Xs)/2
-            xAux = Xm
-            fe = Fun.evalf(subs={x: xAux})
-            fm.append(fe)
-            Error = abs(Xm-Xa)
-            E.append(Error)
-            c = c+1
-            iter.append(c)
-            Xms.append(xAux)
+                a = xm
 
-            # Se guardan los datos            
-        
-        datos.append([iter, Xms, fm, E])
+            xm0 = xm
+            xm = (a+b)/2
 
-        if fe == 0:
-            s = xAux
-            print(s, "es raiz de f(x)")
-        elif Error < Tol:
-            s = xAux
-            #print("//", "Fm:", fm, "//")
-            #print("//", "Error:", fm, "//")
-            #print(s, "es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
-            output["results"] = datos
-            output["root"] = s
-            return output
+            ex_3 = Fun.subs(x, xm)
+            ex_3 = ex_3.evalf()
 
+            error = Abs(xm-xm0)
+
+            datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(
+                xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(ex_3), '{:^15.7E}'.format(error)])
+
+            i += 1
+    except BaseException as e:
+        if str(e) == "can't convert complex to float":
+            output["errors"].append(
+                "Error in data: found complex in calculations")
         else:
-            s = xAux
-            print("Fracaso en ", Niter, " iteraciones ")
-            return 
+            output["errors"].append("Error in data: " + str(e))
 
-    else:
-        print("El intervalo es inadecuado")
+        return output
 
-
-#funcional
-def pivParcial(a,b):
-    datos=list()
-    ab=np.concatenate((a,b), axis=1)
-    #pivoteo por fila parcial
-    tamano=np.shape(ab)
-    n=tamano[0]
-    m=tamano[1]
-
-    for i in range(0, n-1, 1):
-        columna=abs(ab[i:,i])
-        dondemax=np.argmax(columna)
-        #intercambio de fila
-        if dondemax!=0:
-            temporal=np.copy(ab[i,:])
-            ab[i,:]=ab[dondemax+i, :]
-            ab[dondemax,:]=temporal
-    datos.append(ab)
-    return datos
+    output["results"] = datos
+    output["root"] = xm
+    return output
 
 
 def puntoFijo(X0, Tol, Niter, fx, gx):
 
     output = {
         "type": 1,
-        "columns": ["N","xi","F(xi)", "G(xi)", "E" ],
+        "method": "Fixed point",
+        "columns": ["iter", "xi", "g(xi)", "f(xi)", "E"],
+        "iterations": Niter,
         "errors": list()
     }
 
     datos = list()
     x = sympy.Symbol('x')
-    Fun = sympy.sympify(fx, convert_xor=True)
-    GFun = sympy.sympify(gx, convert_xor=True) 
+    i = 1
+    cond = Tol
+    error = 1.000
 
-    gn = []
-    fn = []
-    xn = []
-    E = []
-    N = []
-    xi = X0
-    f = Fun.evalf(subs={x: X0})
-    c = 0
-    Error = 100
+    ex = sympify(fx)
+    rx = sympify(gx)
 
-    fn.append(f)
-    xn.append(xi)
-    E.append(Error)
-    N.append(c)
-    while Error > Tol and f != 0 and c < Niter:
-        xi = GFun.evalf(subs={x: xi})
-        fe = Fun.evalf(subs={x: xi})
-        gxFun = GFun.evalf(subs={x: xi})
-        gn.append(gxFun)
-        fn.append(fe)
-        xn.append(xi)
-        c = c+1
-        Error = abs(xn[c]-xn[c-1])
-        N.append(c)
-        E.append(Error)
-    datos.append([N, xn, fn, gn, E])
-    
-    if fe == 0:
-        s = xi
-        print(s, "es raiz de f(x)")
-        output["root"] = s
+    xP = X0
+    xA = 0.0
+
+    ea = ex.subs(x, xP)
+    ea = ea.evalf()
+
+    ra = rx.subs(x, xP)
+    ra = ra.evalf()
+
+    datos.append([0, '{:^15.7f}'.format(float(xA)), '{:^15.7f}'.format(
+        float(ra)), '{:^15.7E}'.format(float(ea))])
+    try:
+        while((error > cond) and (i < Niter)):
+
+            ra = rx.subs(x, xP)
+            xA = ra.evalf()
+
+            ea = ex.subs(x, xA)
+            ea = ea.evalf()
+
+            error = Abs(xA - (xP))
+
+            xP = xA
+
+            datos.append([i, '{:^15.7f}'.format(float(xA)), '{:^15.7f}'.format(
+                float(ra)), '{:^15.7E}'.format(float(ea)), '{:^15.7E}'.format(float(error))])
+
+            i += 1
+
+    except BaseException as e:
+        output["errors"].append("Error in data: " + str(e))
         return output
-    elif Error < Tol:
-        s = xi
-        print(s, "es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
-        print("N", N)
-        print("xn", xn)
-        print("fn", fn)
-        print("Error", E)
 
-        output["results"] = datos
-        output["root"] = s
-        return output
-    else:
-        s = xi
-        print("Fracaso en ", Niter, " iteraciones ")
+    output["results"] = datos
+    output["root"] = xA
+    return output
 
 
 def newton(X0, Tol, Niter, fx, df):
 
     output = {
         "type": 1,
-        "columns": ["N","xi","F(xi)", "E" ],
+        "columns": ["N", "xi", "F(xi)", "E"],
         "errors": list()
     }
 
     datos = list()
     x = sympy.Symbol('x')
     Fun = sympy.sympify(fx, convert_xor=True)
-    DerF = sympy.sympify(df, convert_xor=True) 
+    DerF = sympy.sympify(df, convert_xor=True)
 
     fn = []
     xn = []
     E = []
     N = []
-    derf=[]
+    derf = []
     xi = X0
     f = Fun.evalf(subs={x: X0})
     derivada = DerF.evalf(subs={x: X0})
@@ -205,98 +153,243 @@ def newton(X0, Tol, Niter, fx, df):
     E.append(Error)
     N.append(c)
 
-    while Error > Tol and f != 0 and derivada != 0 and c < Niter:
-        xi = xi-f/derivada
-        derivada = DerF.evalf(subs={x: xi})
-        f = Fun.evalf(subs={x: xi})
-        fn.append(f)
-        xn.append(xi)
-        c = c+1
-        Error = abs(xn[c]-xn[c-1])
-        derf.append(derivada)
-        N.append(c)
-        E.append(Error)
-        
-    datos.append([N, xn, fn, E])
-    
-    if f == 0:
-        s = xi
-        print(s, "es raiz de f(x)")
-    elif Error < Tol:
-        s = xi
-        print(s, "es una aproximacion de un raiz de f(x) con una tolerancia", Tol)
-        print("N", N)
-        print("xn", xn)
-        print("fn", fn)
-        print("Error", E)
-        
-        output["results"] = datos
-        output["root"] = s
+    try:
+        datos.append([c, '{:^15.7f}'.format(X0), '{:^15.7f}'.format(f)])
+        while Error > Tol and f != 0 and derivada != 0 and c < Niter:
+            xi = xi-f/derivada
+            derivada = DerF.evalf(subs={x: xi})
+            f = Fun.evalf(subs={x: xi})
+            fn.append(f)
+            xn.append(xi)
+            c = c+1
+            Error = abs(xn[c]-xn[c-1])
+            derf.append(derivada)
+            datos.append([c, '{:^15.7f}'.format(float(xi)), '{:^15.7E}'.format(
+                float(f)), '{:^15.7E}'.format(float(Error))])
+    except BaseException as e:
+        if str(e) == "can't convert complex to float":
+            output["errors"].append("Error in data: found complex in calculations")
+        else:
+            output["errors"].append("Error in data: " + str(e))
         return output
-    else:
-        s = xi
-        print("Fracaso en ", Niter, " iteraciones ")
+
+    output["results"] = datos
+    output["root"] = xi
+    return output
 
 
-#Arreglar da 101 iteraciones
-def reglaFalsa(Xi, Xf, Niter, Tol, fx):
+def reglaFalsa(a, b, Niter, Tol, fx):
 
     output = {
         "type": 1,
-        "columns": ["N","xm","F(xm)", "E" ],
+        "method": "Regula falsi",
+        "columns": ["iter","a","xm", "b","f(xm)","E" ],
+        "iterations": Niter,
         "errors": list()
     }
 
     datos = list()
     x = sympy.Symbol('x')
-    Fun = sympy.sympify(fx, convert_xor=True)
+    i = 1
+    cond = Tol
+    error = 1.0000000
 
-    fn = []
-    xm = []
-    E = []
-    N = []
+    ex = sympify(fx)
 
-    fxi = Fun.evalf(subs={x: Xi})
-    fxf = Fun.evalf(subs={x: Xf})
+    xm = 0
+    xm0 = 0
+    ex_2 = 0
+    ex_3 = 0
+    ex_a = 0
+    ex_b = 0
 
-    # iniciar variables
-    solucion = None
-    c = 0
-    error = 1.000000
 
-    fn.append(fxi)
-    xm.append(Xi)
-    E.append(error)
-    N.append(c)
+    try:
+        while (error > cond) and (i < Niter):
+            if i == 1:
+                ex_2 = ex.subs(x, a)
+                ex_2 = ex_2.evalf()
+                ex_a = ex_2
 
-    # Evaluar si la raiz esta dentro del intervalo
-    if fxi*fxf <= 0:
-        while c <= Niter and error >= Tol:
-            c += 1
-            solucion = (Xf-(fxf*(Xf-Xi))/(fxf-fxi))
-            error = abs((solucion-Xi)/solucion)*100
-            # redeefinir el nuevo intervalo
-            fxs = Fun.evalf(subs={x: solucion})
-            if fxi*fxs >= 0:
-                Xi = solucion
+                ex_2 = ex.subs(x, b)
+                ex_2 = ex_2.evalf()
+                ex_b = ex_2
+
+                xm = (ex_b*a - ex_a*b)/(ex_b-ex_a)
+                ex_3 = ex.subs(x, xm)
+                ex_3 = ex_3.evalf()
+                datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(ex_3)])
             else:
-                Xf = solucion
+
+                if (ex_a*ex_3 < 0):
+                    b = xm
+                else:
+                    a = xm
+
+                xm0 = xm
+                ex_2 = ex.subs(x, a)
+                ex_2 = ex_2.evalf()
+                ex_a = ex_2
+
+                ex_2 = ex.subs(x, b)
+                ex_2 = ex_2.evalf()
+                ex_b = ex_2
+
+                xm = (ex_b*a - ex_a*b)/(ex_b-ex_a)
+
+                ex_3 = ex.subs(x, xm)
+                ex_3 = ex_3.evalf()
+
+                error = Abs(xm-xm0)
+                er = sympify(error)
+                error = er.evalf()
+                datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(ex_3), '{:^15.7E}'.format(error)])
+            i += 1
+    except BaseException as e:
+        if str(e)=="can't convert complex to float":
+            output["errors"].append("Error in data: found complex in calculations")
+        else:
+            output["errors"].append("Error in data: " + str(e))
         
-            fn.append(solucion)
-            xm.append(Xi)
-            E.append(error)
-            N.append(c)
-        print(solucion)
-        print(N)
-        print(E)
-    else:
-        print("no hay solucion")
+        return output
+
+    output["results"] = datos
+    output["root"] = xm
+    return output
 
 
-def secante(fx, Tol, Niter, Xs, Xi):
-    pass
+def secante(fx, tol, Niter, x0, x1):
+    output = {
+    "type": 1,
+    "method": "Secant",
+    "columns": ["iter", "xi", "f(xi)","E" ],
+    "errors": list()
+    }
 
-#funcional
+    results = list()
+    x = Symbol('x')
+    i = 0
+    cond = tol
+    error = 1.0000000
+
+    ex = sympify(fx)
+
+    y = x0
+    ex_0 = ex
+    ex_1 = ex
+
+    try:
+        while((error > cond) and (i < Niter)):
+            if i == 0:
+                ex_0 = ex.subs(x, x0)
+                ex_0 = ex_0.evalf()
+                results.append([i, '{:^15.7f}'.format(float(x0)), '{:^15.7E}'.format(float(ex_0))])
+            elif i == 1:
+                ex_1 = ex.subs(x, x1)
+                ex_1 = ex_1.evalf()
+                results.append([i, '{:^15.7f}'.format(float(x1)), '{:^15.7E}'.format(float(ex_1))])
+            else:
+                y = x1
+                x1 = x1 - (ex_1*(x1 - x0)/(ex_1 - ex_0))
+                x0 = y
+
+                ex_0 = ex.subs(x, x0)
+                ex_0 = ex_1.evalf()
+
+                ex_1 = ex.subs(x, x1)
+                ex_1 = ex_1.evalf()
+
+                error = Abs(x1 - x0)
+                
+                results.append([i, '{:^15.7f}'.format(float(x1)), '{:^15.7E}'.format(float(ex_1)), '{:^15.7E}'.format(float(error))])
+            i += 1
+    except BaseException as e:
+        if str(e)=="can't convert complex to float":
+            output["errors"].append("Error in data: found complex in calculations")
+        else:
+            output["errors"].append("Error in data: " + str(e))
+        
+        return output
+
+    output["results"] = results
+    output["root"] = y
+    return output
+
+
+def raicesMultiples(fx, x0, tol, niter):
+
+    output = {
+        "type": 1,
+        "method": "Multi Roots",
+        "columns": ["iter","xi","f(xi)","E" ],
+        "iterations": niter,
+        "errors": list()
+    }
+    results = list()
+    
+    x = Symbol('x')
+    
+    
+    cond = tol
+    error = 1.0000
+
+    ex = sympify(fx)
+
+    d_ex = diff(ex, x) #Primera derivada de Fx
+    d2_ex = diff(d_ex,x) #Segunda derivada de Fx
+
+    xP = x0
+    ex_2 = ex.subs(x,x0)
+    ex_2 = ex_2.evalf()
+    
+    d_ex2 = d_ex.subs(x, x0)
+    d_ex2 = d_ex2.evalf()
+
+    d2_ex2 = d2_ex.subs(x, x0)
+    d2_ex2 = d2_ex2.evalf()
+
+    i = 0
+    results.append([i, '{:^15.7E}'.format(x0), '{:^15.7E}'.format(ex_2)])
+    try:
+        while((error > cond) and (i < niter)): 
+            if(i == 0):                    
+                ex_2 = ex.subs(x, xP)
+                ex_2 = ex_2.evalf()
+            else:
+                d_ex2 = d_ex.subs(x, xP)
+                d_ex2 = d_ex2.evalf()
+
+                d2_ex2 = d2_ex.subs(x, xP)
+                d2_ex2 = d2_ex2.evalf()
+                
+                xA = xP - (ex_2*d_ex2)/((d_ex2)**2 - ex_2*d2_ex2)
+
+                ex_A = ex.subs(x,xA)
+                ex_A = ex_A.evalf()
+
+                error = Abs(xA - xP)
+                error = error.evalf()
+                er = error
+                
+                ex_2 = ex_A
+                xP = xA
+
+                results.append([i , '{:^15.7E}'.format(float(xA)), '{:^15.7E}'.format(float(ex_2)), '{:^15.7E}'.format(float(er))])
+            i += 1
+    except BaseException as e:
+        if str(e)=="can't convert complex to float":
+            output["errors"].append("Error in data: found complex in calculations")
+        else:
+            output["errors"].append("Error in data: " + str(e))
+        
+        return output       
+    
+    output["results"] = results
+    output["root"] = xA
+    return output
+
+
+# funcional
 def luDirecta(n, a):
     matriz=a
     datos=list()
@@ -307,7 +400,7 @@ def luDirecta(n, a):
         for c in range(0, n):
             u[r][c]=matriz[r][c]
     
-#operacion para hacer 0 debajo de la diagonal
+# operacion para hacer 0 debajo de la diagonal
     for k in range(0,n):
         for r in range(0,n):
             if k==r:
@@ -319,7 +412,6 @@ def luDirecta(n, a):
                     matriz[r][c]=matriz[r][c]-(factor*matriz[k][c])
                     u[r][c]=matriz[r][c]
     datos.append([l, u])
-    #l=np.transpose(l)
-    #u=np.transpose(u)
+    # l=np.transpose(l)
+    # u=np.transpose(u)
     return datos
-            
