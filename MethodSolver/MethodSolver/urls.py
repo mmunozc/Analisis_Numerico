@@ -27,6 +27,7 @@ urlpatterns = [
     path('newton', views.newtonView, name="newton"),
     path('reglaFalsa', views.reglaFalsaView, name="reglaFalsa"),
     path('luDirecta', views.luDirectaView, name='luDirecta'),
+    path('raicesMultiples', views.raicesMultiplesView, name='raicesMultiples'),
     #path('secante', views.menu, name="secante"),
     #path('gausspiv', views.menu, name="gausspiv"),
     #path('taylorcos', views.menu, name="taylorcos"),

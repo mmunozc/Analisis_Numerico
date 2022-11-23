@@ -6,7 +6,7 @@
 <div class="info">
     <br>
     <br>
-    <h1>Método de bisección</h1>
+    <h1>Método de Raíces Múltiples</h1>
 </div>
 
 
@@ -19,40 +19,33 @@
                 <form method="post">
                     <div class="form-group">
                         {% csrf_token %}
-                        <label for="funcion">Funcion</label>
+                        <label for="funcion">Función</label>
                         <input type="text" 
                                 class="form-control" 
                                 name="funcion" 
                                 placeholder="Example input">
 
-                                
-                        <label for="funcion">Valor de intervalo (a)</label>
+                        <label for="funcion">X0</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="xs" 
+                                name="x0"  
                                 placeholder="Example input">
-                                
-                        <label for="funcion">Valor de intervalo (b)</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="xi" 
-                                placeholder="Example input">
-                                
-                        <label for="funcion">Tolerancia</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="tolerancia"  
-                                placeholder="Example input">
-        
+
                         <label for="funcion">Iteraciones</label>
                         <input type="text" 
                                 class="form-control" 
                                 name="iteraciones" 
                                 placeholder="Example input">
-                                
-                                <button type="submit" class="btn btn-outline-secondary" >Evaluar</button>
-                            </div>
-                        </form>
+
+                        <label for="funcion">Tolerancia</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="tolerancia" 
+                                placeholder="Example input">
+
+                        <button type="submit" class="btn btn-outline-secondary" >Evaluar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -71,10 +64,10 @@
                 </tr>
             </thead>
             <tbody>
-                {%for datos in data.results %}
+                {%for dato in data.results %}
                 <tr>
-                    {%for valor in datos %}
-                    <td>{{valor}}</td>
+                    {%for valores in dato %}
+                    <td>{{valores}}</td>
                     {% endfor %}
                 </tr>
                 {% endfor %}
