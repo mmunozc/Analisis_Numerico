@@ -650,7 +650,8 @@ def splineCubica(X, Y):
 
 # funcional
 def sor(Ma, Vb, x0, w, tol, niter):
-    datos={}
+    iteraciones=[]
+    informacion=[]
     cumple=False
     n=len(Ma)
     k=0
@@ -664,11 +665,14 @@ def sor(Ma, Vb, x0, w, tol, niter):
         norma=np.linalg.norm(x0-xk1)
         x0=xk1
         print('Iteracion:{}->{} norma {}'.format(k, xk1, norma))
-        datos["iteracion"]=k
-        datos["resultado"]=xk1
+        iteraciones.append(k)
+        informacion.append(xk1)
         cumple=norma<tol
         k+=1
+    
     if k<niter:
+        datos={"iteraciones":iteraciones,
+            "datos":informacion}
         return datos
     else:
         return "el sistem no converge"
