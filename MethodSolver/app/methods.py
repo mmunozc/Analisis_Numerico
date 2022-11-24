@@ -431,9 +431,9 @@ def jacobi(Ma, Vb, x0, tol, niter):
     output["t"] = T
     output["c"] = C
 
-    print(T)
-    print(C)
-    return output
+    resultado={"t":T,
+                "c":C}
+    return resultado
 
 
 def gaussSeidel(Ma, Vb, x0, tol, niter):
