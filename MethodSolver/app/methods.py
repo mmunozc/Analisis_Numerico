@@ -651,48 +651,25 @@ def splineCubica(X, Y):
 
 # funcional
 def sor(Ma, Vb, x0, w, tol, niter):
-    output = {
-        "type": 4,
-        "method": "SOR(Relaxation) Method",
-        "iterations": niter
-    }
+    datos={}
+    cumple=False
+    n=len(Ma)
+    k=0
 
-    sX = np.size(x0)
-    xA = np.zeros((sX, 1))
-
-    A = np.matrix(Ma)
-
-    b = np.array(Vb)
-    s = b.size
-    b = np.reshape(b, (s, 1))
-
-    D = np.diag(np.diag(A))
-    L = -1*np.tril(A)+D
-    U = -1*np.triu(A)+D
-
-    T = np.linalg.inv(D-(w*L)) @ (((1-w)*D)+(w*U))
-    C = (w*np.linalg.inv(D-(w*L))) @ b
-
-    xP = x0
-    E = 1000
-    cont = 0
-    steps = {'Step 0': np.copy(xA)}
-    while(E > tol and cont < niter):
-        xA = T@xP + C
-        E = np.linalg.norm(xP - xA)
-        xP = xA
-        cont = cont + 1
-        steps[f'Step {cont+1}'] = np.copy(xA)
-
-    nIter = cont
-    error = E
-
-    output["results"] = steps
-    output["E"] = error
-    output["Iteration"] = nIter
-
-    print(T)
-    print(C)
-    print("steps", steps)
-
-    return output
+    while(not cumple and k<niter):
+        xk1=np.zeros(n)
+        for i in range(n):
+            s1=np.dot(Ma[i][:i],xk1[:i])
+            s2=np.dot(Ma[i][i+1:], x0[i+1:])
+            xk1[i]=(Vb[i]-s1-s2)/Ma[i][i]*w+(1-w)*x0[i]
+        norma=np.linalg.norm(x0-xk1)
+        x0=xk1
+        print('Iteracion:{}->{} norma {}'.format(k, xk1, norma))
+        datos["iteracion"]=k
+        datos["resultado"]=xk1
+        cumple=norma<tol
+        k+=1
+    if k<niter:
+        return datos
+    else:
+        return "el sistem no converge"

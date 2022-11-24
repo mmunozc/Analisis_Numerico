@@ -211,9 +211,11 @@ def sorView(request):
         mA = toMatrix(request.POST["matrizA"])
         Vx0 = toVector(request.POST["vectorX0"])
         Vb = toVector(request.POST["vectorB"])
-
+        print(mA)
+        print(Vx0)
+        print(Vb)
         w = request.POST["wValue"]
-        W = int(w)
+        W = float(w)
 
         niter = request.POST["iteraciones"]
         Niter = int(niter)
