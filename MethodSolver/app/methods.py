@@ -8,7 +8,6 @@ from scipy import linalg
 def biseccion(fx, Tol, Niter, a, b):
 
     output = {
-        "type": 1,
         "method": "Bisection",
         "columns": ["iter", "a", "xm", "b", "f(xm)", "E"],
         "iterations": Niter,
@@ -68,11 +67,9 @@ def biseccion(fx, Tol, Niter, a, b):
     output["root"] = xm
     return output
 
-
 def puntoFijo(X0, Tol, Niter, fx, gx):
 
     output = {
-        "type": 1,
         "method": "Fixed point",
         "columns": ["iter", "xi", "g(xi)", "f(xi)", "E"],
         "iterations": Niter,
@@ -125,11 +122,9 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
     output["root"] = xA
     return output
 
-
 def newton(X0, Tol, Niter, fx, df):
 
     output = {
-        "type": 1,
         "columns": ["N", "xi", "F(xi)", "E"],
         "errors": list()
     }
@@ -180,11 +175,9 @@ def newton(X0, Tol, Niter, fx, df):
     output["root"] = xi
     return output
 
-
 def reglaFalsa(a, b, Niter, Tol, fx):
 
     output = {
-        "type": 1,
         "method": "Regula falsi",
         "columns": ["iter", "a", "xm", "b", "f(xm)", "E"],
         "iterations": Niter,
@@ -262,10 +255,8 @@ def reglaFalsa(a, b, Niter, Tol, fx):
     output["root"] = xm
     return output
 
-
 def secante(fx, tol, Niter, x0, x1):
     output = {
-        "type": 1,
         "method": "Secant",
         "columns": ["iter", "xi", "f(xi)", "E"],
         "errors": list()
@@ -324,11 +315,9 @@ def secante(fx, tol, Niter, x0, x1):
     output["root"] = y
     return output
 
-
 def raicesMultiples(fx, x0, tol, niter):
 
     output = {
-        "type": 1,
         "method": "Multi Roots",
         "columns": ["iter", "xi", "f(xi)", "E"],
         "iterations": niter,
@@ -398,14 +387,12 @@ def raicesMultiples(fx, x0, tol, niter):
     output["root"] = xA
     return output
 
-
 def jacobi(Ma, Vb, x0, tol, niter):
     print(Ma)
     print(x0)
     print(Vb)
 
     output = {
-        "type": 4,
         "method": "Jacobi's Method",
         "iterations": niter,
         "errors": list(),
@@ -435,10 +422,8 @@ def jacobi(Ma, Vb, x0, tol, niter):
                 "c":C}
     return resultado
 
-
 def gaussSeidel(Ma, Vb, x0, tol, niter):
     output = {
-        "type": 4,
         "method": "Gauss-Seidel's Method",
         "iterations": niter
     }
@@ -482,12 +467,9 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
                 "c":C,
                 "informacion":datos}
     return resultado
-    
-
 
 def splineLineal(X, Y):
     output = {
-        "type": 8,
         "method": "Linear Tracers",
         "errors": list()
     }
@@ -529,10 +511,8 @@ def splineLineal(X, Y):
     output["results"] = Coef
     return output
 
-
 def splineCuadratica(X, Y):
     output = {
-        "type": 8,
         "method": "Quadratic Tracers",
         "errors": list()
     }
@@ -585,10 +565,8 @@ def splineCuadratica(X, Y):
     output["results"] = Coef
     return output
 
-
 def splineCubica(X, Y):
     output = {
-        "type": 8,
         "method": "Cubic Tracers",
         "errors": list()
     }
@@ -654,7 +632,6 @@ def splineCubica(X, Y):
     output["results"] = Coef
     return output
 
-# funcional
 def sor(Ma, Vb, x0, w, tol, niter):
     iteraciones=[]
     informacion=[]
@@ -706,3 +683,29 @@ def vandermonde(a,b):
     }
 
     return datos
+
+#Corregir
+def newtonDivDif(X, Y):
+    output = {}
+
+    X = np.array(X)
+    n = X.size
+
+    Y = np.array(Y)
+
+    D = np.zeros((n,n))
+
+    D[:,0]=Y.T
+    for i in range(1,n):
+        aux0 = D[i-1:n,i-1]
+        aux = np.diff(aux0)
+        aux2 = X[i:n] - X[0:n-i]
+        D[i:n,i] = aux/aux2.T  
+
+    Coef = np.diag(D)
+    
+    
+    output["D"] = D
+    output["Coef"] = Coef
+    
+    return output
