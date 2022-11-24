@@ -671,8 +671,8 @@ def sor(Ma, Vb, x0, w, tol, niter):
         k+=1
     
     if k<niter:
-        datos={"iteraciones":iteraciones,
-            "datos":informacion}
+
+        datos=zip(iteraciones, informacion)
         return datos
     else:
         return "el sistem no converge"

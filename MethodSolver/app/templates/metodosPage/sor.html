@@ -78,16 +78,16 @@
                 <th>Iteraciones</th>
                 <th>Datos</th>
             </tr>
-            {% for i in data.iteraciones%}
+
+            {% for i,j in data%}
             <tr>
                 <td>{{i}}</td>
-            </tr>
-            {% endfor %}
-            {% for j in data.datos %}
-            <tr>
                 <td>{{j}}</td>
             </tr>
-            {% endfor %}            
+            {% endfor %}
+
+
+            
         </table>
     </div>
 </div>
