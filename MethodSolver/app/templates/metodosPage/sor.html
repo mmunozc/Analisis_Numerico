@@ -79,16 +79,14 @@
                 <th>Datos</th>
             </tr>
 
-            {% for i,j in data%}
+            {% for i,j in data.informacion %}
             <tr>
                 <td>{{i}}</td>
                 <td>{{j}}</td>
             </tr>
             {% endfor %}
-
-
-            
         </table>
+        <h4>La solucion del sistema es: {{data.solucion}}</h4>
     </div>
 </div>
 

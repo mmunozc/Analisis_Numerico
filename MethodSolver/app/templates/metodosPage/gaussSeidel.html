@@ -65,14 +65,34 @@
 <!-- TODO: CUADRAR LA TABLA -->
 
     <div class="col-5">
+        <h2>Matrizes</h2>
+        <table class="table">
+            <tr>
+                <th>Matriz T</th>
+                <th>Matriz C</th>
+            </tr>
+
+            <tr>
+                <td>{{data.t}}</td>
+                <td>{{data.c}}</td>
+            </tr>
+        </table>
         <h2>Solucion</h2>
-        {% for j in output.t %}
-        <div class="card" style="margin: 10pt 0;">
-            <div class="card-body">
-                <pre class="h5">{{j}}</pre>
-            </div>
-        </div>
-        {% endfor %}
+        <table class="table">
+            <tr>
+                <th>Iteraciones</th>
+                <th>Error</th>
+                <th>Datos</th>
+            </tr>
+
+            {% for i,j,k in data.informacion %}
+            <tr>
+                <td>{{i}}</td>
+                <td>{{j}}</td>
+                <td>{{k}}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 </div>
 

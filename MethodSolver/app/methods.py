@@ -442,6 +442,9 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
         "method": "Gauss-Seidel's Method",
         "iterations": niter
     }
+    iteraciones=[]
+    informacion=[]
+    error=[]
 
     sX = np.size(x0)
     xA = np.zeros((sX, 1))
@@ -469,14 +472,17 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
         E = np.linalg.norm(xP - xA)
         xP = xA
         cont = cont + 1
+        iteraciones.append(cont)
+        informacion.append(xA)
+        error.append(E)
         steps[f'Step {cont+1}'] = np.copy(xA)
 
-    niter = cont
-    error = E
-
-    print("T", T)
-    print("C", C)
-    print("steps", steps)
+    datos=zip(iteraciones, error, informacion)
+    resultado={"t":T,
+                "c":C,
+                "informacion":datos}
+    return resultado
+    
 
 
 def splineLineal(X, Y):
@@ -671,9 +677,10 @@ def sor(Ma, Vb, x0, w, tol, niter):
         k+=1
     
     if k<niter:
-
         datos=zip(iteraciones, informacion)
-        return datos
+        resultado={"solucion":x0,
+                    "informacion":datos}
+        return resultado
     else:
         return "el sistem no converge"
 
