@@ -280,7 +280,6 @@ def splineCuadraticaView(request):
 
     return render(request, "./metodosPage/spline-cuadratica.html")
 
-
 def splineCubicaView(request):
     if request.method == 'POST':
         x = request.POST["x"]
@@ -306,6 +305,15 @@ def splineCubicaView(request):
 
     return render(request, "./metodosPage/spline-cubica.html")
 
+def vandermondeView(request):
+    if request.method=='POST':
+        vectorX=toVector(request.POST["vectorX"])
+        vectorY=toVector(request.POST["vectorY"])
+        datos=vandermonde(vectorX, vectorY)
+
+        if datos:
+            return render(request, "./metodosPage/vandermonde.html", {"data":datos})
+    return render(request, "./metodosPage/vandermonde.html")
 
 
 #Metodos auxiliar

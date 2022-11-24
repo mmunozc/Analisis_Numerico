@@ -648,7 +648,6 @@ def splineCubica(X, Y):
     output["results"] = Coef
     return output
 
-
 # funcional
 def sor(Ma, Vb, x0, w, tol, niter):
     datos={}
@@ -673,3 +672,26 @@ def sor(Ma, Vb, x0, w, tol, niter):
         return datos
     else:
         return "el sistem no converge"
+
+def vandermonde(a,b):
+    copiaB=np.copy(b)
+    longitudMatriz=len(a)
+    matrizVandermonde=np.vander(a)
+    coeficientes=np.linalg.solve(matrizVandermonde, copiaB)
+    coeficientes2=np.char.strip(coeficientes)
+        
+    print(coeficientes)
+    x=sympy.Symbol('x')
+    polinomio=0
+    for i in range(0, longitudMatriz, 1):
+        potencia=(longitudMatriz-1)-i
+        termino=coeficientes[i](x*potencia)
+        polinomio=polinomio+termino
+
+    datos={
+        "matriz":matrizVandermonde,
+        "coeficientes":coeficientes2,
+        "polinomio":polinomio,
+    }
+
+    return datos
