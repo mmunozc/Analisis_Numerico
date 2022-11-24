@@ -310,7 +310,6 @@ def vandermondeView(request):
         vectorX=toVector(request.POST["vectorX"])
         vectorY=toVector(request.POST["vectorY"])
         datos=vandermonde(vectorX, vectorY)
-
         if datos:
             return render(request, "./metodosPage/vandermonde.html", {"data":datos})
     return render(request, "./metodosPage/vandermonde.html")

@@ -37,4 +37,5 @@ urlpatterns = [
     path('splineLineal', views.splineLinealView, name='splineLineal'),
     path('splineCuadratica', views.splineCuadraticaView, name='aplineCuadratica'),
     path('splineCubica', views.splineCubicaView, name='splineCubica'),
+    path('vandermonde', views.vandermondeView, name='vandermonde')
 ]

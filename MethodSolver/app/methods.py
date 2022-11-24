@@ -678,19 +678,19 @@ def vandermonde(a,b):
     longitudMatriz=len(a)
     matrizVandermonde=np.vander(a)
     coeficientes=np.linalg.solve(matrizVandermonde, copiaB)
-    coeficientes2=np.char.strip(coeficientes)
-        
+            
     print(coeficientes)
     x=sympy.Symbol('x')
     polinomio=0
     for i in range(0, longitudMatriz, 1):
         potencia=(longitudMatriz-1)-i
-        termino=coeficientes[i](x*potencia)
+        termino=coeficientes[i]*(x**potencia)
         polinomio=polinomio+termino
 
+    print(polinomio)
     datos={
         "matriz":matrizVandermonde,
-        "coeficientes":coeficientes2,
+        "coeficientes":coeficientes,
         "polinomio":polinomio,
     }
 

@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<div class="info">
+    <br>
+    <br>
+    <h1>Método Lineal</h1>
+</div>
+<div class="row mt-5 mb-10">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ingrese sus datos</h5>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+
+                        <label for="funcion">X</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="vectorX" 
+                                placeholder="Example input">
+
+                        <label for="funcion">Y</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="vectorY"  
+                                placeholder="Example input">
+
+                        <button type="submit" class="btn btn-outline-secondary">Evaluar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-5">
+
+        {% if data %}
+        <table class="table">
+            <thead class="thead-dark">
+                <h3>Matriz</h3>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <h4>{{data.matriz}}</h4>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table">
+            <thead>
+                <h3>Coeficientes</h3>
+            </thead>
+            <tbody>
+                {%for i in data.coeficientes %}
+                <tr>
+                    <td>
+                        <h4>{{i}}</h4>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+
+    <table class="table">
+        <thead>
+            <h3>Polinomio</h3>
+        </thead>
+        <tbody>
+           
+            <tr>
+                <td>
+                    <h4>{{data.polinomio}}</h4>
+                </td>
+            </tr>
+          
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
