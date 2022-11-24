@@ -72,13 +72,16 @@
 
     <div class="col-5">
         <h2>Solucion</h2>
-        {% for j in datos.t %}
-        <div class="card" style="margin: 10pt 0;">
-            <div class="card-body">
-                <pre class="h5">{{j}}</pre>
-            </div>
-        </div>
-        {% endfor %}
+        
+        <table class="table">
+            <tr>
+                <th>Iteraciones</th>
+                <th>Datos</th>
+            </tr>
+            
+            <tr>{{data}}</tr>
+            
+        </table>
     </div>
 </div>
 
