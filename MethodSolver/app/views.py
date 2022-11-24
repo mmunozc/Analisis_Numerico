@@ -244,7 +244,7 @@ def splineLinealView(request):
         Errors = output["errors"]
 
         if(len(Errors)==0):    
-            Dic = outputTracers(output)
+            Dic = splineOutput(output)
             data = Dic.split("\n")
             Coef = [data[7], data[8], data[9]]
             Tracers = [data[12], data[13], data[14]]
@@ -253,14 +253,56 @@ def splineLinealView(request):
 
     return render(request, "./metodosPage/spline-lineal.html")
 
-
 def splineCuadraticaView(request):
+    if request.method == 'POST':
+        x = request.POST["x"]
+        X = x.split(",")
+        X = [float(i) for i in X]
+        y = request.POST["y"]
+        Y = y.split(",")
+        Y = [float(i) for i in Y]
+        
+        output = splineCuadratica(X,Y)
+    
+        Coef = ""
+        Tracers = ""
+        Errors = output["errors"]
+
+        if(len(Errors)==0):    
+            Dic = splineOutput(output)
+            data = Dic.split("\n")
+            Coef = [data[7], data[8], data[9]]
+            Tracers = [data[12], data[13], data[14]]
+
+        return render(request, "./metodosPage/spline-cuadratica.html",{"coef":Coef, "tracers":Tracers ,"errors":Errors})
+
     return render(request, "./metodosPage/spline-cuadratica.html")
 
 
 def splineCubicaView(request):
-    return render(request, "./metodosPage/spline-cubica.html")
+    if request.method == 'POST':
+        x = request.POST["x"]
+        X = x.split(",")
+        X = [float(i) for i in X]
+        y = request.POST["y"]
+        Y = y.split(",")
+        Y = [float(i) for i in Y]
+        
+        output = splineCubica(X,Y)
+    
+        Coef = ""
+        Tracers = ""
+        Errors = output["errors"]
 
+        if(len(Errors)==0):    
+            Dic = splineOutput(output)
+            data = Dic.split("\n")
+            Coef = [data[7], data[8], data[9]]
+            Tracers = [data[12], data[13], data[14]]
+
+        return render(request, "./metodosPage/spline-cubica.html",{"coef":Coef, "tracers":Tracers ,"errors":Errors})
+
+    return render(request, "./metodosPage/spline-cubica.html")
 
 
 
@@ -286,7 +328,7 @@ def toVector(vectorStr):
         auxV.append(float(num))
     return auxV
 
-def outputTracers(output):
+def splineOutput(output):
     stringOutput = f'\n{output["method"]}\n'
     stringOutput += "\nResults:\n"
     stringOutput += "\nTracer coefficients:\n\n"

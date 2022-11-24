@@ -19,67 +19,65 @@
                 <form method="post">
                     <div class="form-group">
                         {% csrf_token %}
-                        <label for="funcion">Matriz A</label>
+                        <label for="funcion">X</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="matrizA" 
+                                name="x" 
                                 placeholder="Example input">
 
-                        <label for="funcion">Vector X0</label>
+                        <label for="funcion">Y</label>
                         <input type="text" 
                                 class="form-control" 
-                                name="vectorX0"  
+                                name="y"  
                                 placeholder="Example input">
-
-                        <label for="funcion">Vector B</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="vectorB" 
-                                placeholder="Example input">
-                        
-                        <label for="funcion">Valor - W</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="wValue" 
-                                placeholder="Example input">
-
-                        <label for="funcion">Tolerancia</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="tolerancia" 
-                                placeholder="Example input">
-
-<!--                         <label for="funcion">Valor norma</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="norma" 
-                                placeholder="Example input"> -->
-
-                        <label for="funcion">Iteraciones</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="iteraciones" 
-                                placeholder="Example input">
-
-                        <button type="submit" class="btn btn-outline-secondary" >Evaluar</button>
+                        <button type="submit" class="btn btn-outline-secondary">Evaluar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-<!-- TODO: CUADRAR LA TABLA -->
+    <!-- Resultado -->
 
     <div class="col-5">
-        <h2>Solucion</h2>
-        {% for j in output.t %}
-        <div class="card" style="margin: 10pt 0;">
-            <div class="card-body">
-                <pre class="h5">{{j}}</pre>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
 
-{% endblock %}
+        {% if coef %}
+        <table class="table">
+            <thead class="thead-dark">
+                <h3>Coefficients</h3>
+                <tr>
+                    <th scope="col">VALUES </th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for i in coef %}
+                <tr>
+                    <td>
+                        <h4>{{i}}</h4>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <table class="table">
+            <thead>
+                <h3>Polynomial</h3>
+                <tr>
+                    <th scope="col">VALUES</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for i in tracers %}
+                <tr>
+                    <td>
+                        <h4>{{i}}</h4>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+
+    {% endblock %}

@@ -265,10 +265,10 @@ def reglaFalsa(a, b, Niter, Tol, fx):
 
 def secante(fx, tol, Niter, x0, x1):
     output = {
-    "type": 1,
-    "method": "Secant",
-    "columns": ["iter", "xi", "f(xi)", "E"],
-    "errors": list()
+        "type": 1,
+        "method": "Secant",
+        "columns": ["iter", "xi", "f(xi)", "E"],
+        "errors": list()
     }
 
     results = list()
@@ -404,7 +404,7 @@ def jacobi(Ma, Vb, x0, tol, niter):
     print(x0)
     print(Vb)
 
-    output = {        
+    output = {
         "type": 4,
         "method": "Jacobi's Method",
         "iterations": niter,
@@ -412,13 +412,13 @@ def jacobi(Ma, Vb, x0, tol, niter):
     }
 
     sX = np.size(x0)
-    xA = np.zeros((sX,1))
+    xA = np.zeros((sX, 1))
 
     A = np.matrix(Ma)
 
     b = np.array(Vb)
     s = b.size
-    b = np.reshape(b,(s,1))
+    b = np.reshape(b, (s, 1))
 
     D = np.diag(np.diag(A))
     L = -1*np.tril(A)+D
@@ -428,13 +428,13 @@ def jacobi(Ma, Vb, x0, tol, niter):
     T = np.linalg.inv(D) @ LU
     C = np.linalg.inv(D) @ b
 
-
-    output["t"] = T 
-    output["c"]= C
+    output["t"] = T
+    output["c"] = C
 
     print(T)
     print(C)
     return output
+
 
 def gaussSeidel(Ma, Vb, x0, tol, niter):
     output = {
@@ -442,29 +442,29 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
         "method": "Gauss-Seidel's Method",
         "iterations": niter
     }
-    
+
     sX = np.size(x0)
-    xA = np.zeros((sX,1))
-    
+    xA = np.zeros((sX, 1))
+
     A = np.matrix(Ma)
-    
+
     b = np.array(Vb)
     s = b.size
-    b = np.reshape(b,(s,1))
+    b = np.reshape(b, (s, 1))
 
     D = np.diag(np.diag(A))
     L = -1*np.tril(A)+D
     U = -1*np.triu(A)+D
-    
+
     T = np.linalg.inv(D-L) @ U
     C = np.linalg.inv(D-L) @ b
-    
+
     xP = x0
     E = 1000
     cont = 0
 
     steps = {'Step 0': np.copy(xA)}
-    while(E > tol and cont < niter  ):
+    while(E > tol and cont < niter):
         xA = T@xP + C
         E = np.linalg.norm(xP - xA)
         xP = xA
@@ -478,49 +478,176 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
     print("C", C)
     print("steps", steps)
 
-def splineLineal(X,Y):
+
+def splineLineal(X, Y):
     output = {
         "type": 8,
         "method": "Linear Tracers",
-        "errors" : list()
+        "errors": list()
     }
     X = np.array(X)
     Y = np.array(Y)
     n = X.size
     m = 2*(n-1)
-    A = np.zeros((m,m))
-    b = np.zeros((m,1))
-    Coef = np.zeros((n-1,2))
+    A = np.zeros((m, m))
+    b = np.zeros((m, 1))
+    Coef = np.zeros((n-1, 2))
     i = 0
-    #Interpolating condition
+    # Interpolating condition
     try:
         while i < X.size-1:
-            A[i+1,[2*i+1-1,2*i+1]]= [X[i+1],1] 
-            b[i+1]=Y[i+1]
+            A[i+1, [2*i+1-1, 2*i+1]] = [X[i+1], 1]
+            b[i+1] = Y[i+1]
             i = i+1
 
-        A[0,[0,1]] = [X[0],1] 
+        A[0, [0, 1]] = [X[0], 1]
         b[0] = Y[0]
         i = 1
-        #Condition of continuity
+        # Condition of continuity
         while i < X.size-1:
-            A[X.size-1+i,2*i-2:2*i+2] = np.hstack((X[i],1,-X[i],-1))
+            A[X.size-1+i, 2*i-2:2*i+2] = np.hstack((X[i], 1, -X[i], -1))
             b[X.size-1+i] = 0
             i = i+1
 
-        Saux = linalg.solve(A,b)
-        #Order Coefficients
+        Saux = linalg.solve(A, b)
+        # Order Coefficients
         i = 0
         while i < X.size-1:
-            Coef[i,:] = [Saux[2*i],Saux[2*i+1]]
+            Coef[i, :] = [Saux[2*i], Saux[2*i+1]]
             i = i+1
-        
-    except BaseException as e:  
+
+    except BaseException as e:
         output["errors"].append("Error in data: " + str(e))
         return output
-    
+
     output["results"] = Coef
     return output
+
+
+def splineCuadratica(X, Y):
+    output = {
+        "type": 8,
+        "method": "Quadratic Tracers",
+        "errors": list()
+    }
+    X = np.array(X)
+    Y = np.array(Y)
+    n = X.size
+    m = 3*(n-1)
+    A = np.zeros((m, m))
+    b = np.zeros((m, 1))
+    Coef = np.zeros((n-1, 3))
+    i = 0
+    try:
+        # Interpolating condition
+        while i < X.size-1:
+
+            A[i+1, 3*i:3*i+3] = np.hstack((X[i+1]**2, X[i+1], 1))
+            b[i+1] = Y[i+1]
+            i = i+1
+
+        A[0, 0:3] = np.hstack((X[0]**2, X[0]**1, 1))
+        b[0] = Y[0]
+        # Condition of continuity
+        i = 1
+        while i < X.size-1:
+            A[X.size-1+i, 3*i-3:3*i +
+                3] = np.hstack((X[i]**2, X[i], 1, -X[i]**2, -X[i], -1))
+            b[X.size-1+i] = 0
+            i = i+1
+        # Condition of smoothness
+        i = 1
+        while i < X.size-1:
+            A[2*n-3+i, 3*i-3:3*i+3] = np.hstack((2*X[i], 1, 0, -2*X[i], -1, 0))
+            b[2*n-3+i] = 0
+            i = i+1
+        A[m-1, 0] = 2
+        b[m-1] = 0
+
+        Saux = linalg.solve(A, b)
+        # Order Coefficients
+        i = 0
+        j = 0
+        while i < n-1:
+            Coef[i, :] = np.hstack((Saux[j], Saux[j+1], Saux[j+2]))
+            i = i+1
+            j = j + 3
+    except BaseException as e:
+        output["errors"].append("Error in data: " + str(e))
+        return output
+
+    output["results"] = Coef
+    return output
+
+
+def splineCubica(X, Y):
+    output = {
+        "type": 8,
+        "method": "Cubic Tracers",
+        "errors": list()
+    }
+    X = np.array(X)
+    Y = np.array(Y)
+    n = X.size
+    m = 4*(n-1)
+    A = np.zeros((m, m))
+    b = np.zeros((m, 1))
+    Coef = np.zeros((n-1, 4))
+    i = 0
+    try:
+        # Interpolating condition
+        while i < X.size-1:
+
+            A[i+1, 4*i:4*i+4] = np.hstack((X[i+1]**3, X[i+1]**2, X[i+1], 1))
+            b[i+1] = Y[i+1]
+            i = i+1
+
+        A[0, 0:4] = np.hstack((X[0]**3, X[0]**2, X[0]**1, 1))
+        b[0] = Y[0]
+        # Condition of continuity
+        i = 1
+        while i < X.size-1:
+            A[X.size-1+i, 4*i-4:4*i +
+                4] = np.hstack((X[i]**3, X[i]**2, X[i], 1, -X[i]**3, -X[i]**2, -X[i], -1))
+            b[X.size-1+i] = 0
+            i = i+1
+        # Condition of smoothness
+        i = 1
+        while i < X.size-1:
+            A[2*n-3+i, 4*i-4:4*i +
+                4] = np.hstack((3*X[i]**2, 2*X[i], 1, 0, -3*X[i]**2, -2*X[i], -1, 0))
+            b[2*n-3+i] = 0
+            i = i+1
+
+        # Concavity condition
+        i = 1
+        while i < X.size-1:
+            A[3*n-5+i, 4*i-4:4*i +
+                4] = np.hstack((6*X[i], 2, 0, 0, -6*X[i], -2, 0, 0))
+            b[n+5+i] = 0
+            i = i+1
+
+        # Boundary conditions
+        A[m-2, 0:2] = [6*X[0], 2]
+        b[m-2] = 0
+        A[m-1, m-4:m-2] = [6*X[X.size-1], 2]
+        b[m-1] = 0
+
+        Saux = linalg.solve(A, b)
+        # Order Coefficients
+        i = 0
+        j = 0
+        while i < n-1:
+            Coef[i, :] = np.hstack((Saux[j], Saux[j+1], Saux[j+2], Saux[j+3]))
+            i = i+1
+            j = j + 4
+    except BaseException as e:
+        output["errors"].append("Error in data: " + str(e))
+        return output
+
+    output["results"] = Coef
+    return output
+
 
 # funcional
 def sor(Ma, Vb, x0, w, tol, niter):
@@ -529,23 +656,23 @@ def sor(Ma, Vb, x0, w, tol, niter):
         "method": "SOR(Relaxation) Method",
         "iterations": niter
     }
-    
+
     sX = np.size(x0)
-    xA = np.zeros((sX,1))
-    
+    xA = np.zeros((sX, 1))
+
     A = np.matrix(Ma)
-    
+
     b = np.array(Vb)
     s = b.size
-    b = np.reshape(b,(s,1))
+    b = np.reshape(b, (s, 1))
 
     D = np.diag(np.diag(A))
     L = -1*np.tril(A)+D
     U = -1*np.triu(A)+D
-    
+
     T = np.linalg.inv(D-(w*L)) @ (((1-w)*D)+(w*U))
     C = (w*np.linalg.inv(D-(w*L))) @ b
-    
+
     xP = x0
     E = 1000
     cont = 0
@@ -559,14 +686,13 @@ def sor(Ma, Vb, x0, w, tol, niter):
 
     nIter = cont
     error = E
-    
+
     output["results"] = steps
     output["E"] = error
     output["Iteration"] = nIter
-    
+
     print(T)
     print(C)
     print("steps", steps)
-    
-    return output
 
+    return output

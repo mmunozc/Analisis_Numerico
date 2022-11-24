@@ -19,34 +19,18 @@
                 <form method="post">
                     <div class="form-group">
                         {% csrf_token %}
-                        <div class="row">
-                            <div class="col">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon3">X</sub> </span>
-                                    </div>
-                                    <input type="text" class="form-control" name="x" aria-describedby="basic-addon3"
-                                        required>
-                                    <div class="invalid-feedback">
-                                        Insert valid value
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon3">Y</sub> </span>
-                                    </div>
-                                    <input type="text" class="form-control" name="y" aria-describedby="basic-addon3"
-                                        required>
-                                    <div class="invalid-feedback">
-                                        Insert valid value
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                        <label for="funcion">X</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="x" 
+                                placeholder="Example input">
+
+                        <label for="funcion">Y</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="y"  
+                                placeholder="Example input">
 
                         <button type="submit" class="btn btn-outline-secondary">Evaluar</button>
                     </div>
