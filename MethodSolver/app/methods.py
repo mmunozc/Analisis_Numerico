@@ -283,11 +283,11 @@ def secante(fx, tol, Niter, x0, x1):
     try:
         while((error > cond) and (i < Niter)):
             if i == 0:
-                Fx0 = Fun.subs(x, x0) #Evaluacion valor a del intervalo [a, b]
+                Fx0 = Fun.subs(x, x0) #Evaluacion en el valor inicial X0
                 Fx0 = Fx0.evalf()
                 results.append([i, '{:^15.7f}'.format(float(x0)), '{:^15.7E}'.format(float(Fx0))])
             elif i == 1:
-                Fx1 = Fun.subs(x, x1)#Evaluacion valor b del intervalo [a, b]
+                Fx1 = Fun.subs(x, x1)#Evaluacion en el valor inicial X1
                 Fx1 = Fx1.evalf()
                 results.append([i, '{:^15.7f}'.format(float(x1)), '{:^15.7E}'.format(float(Fx1))])
             else:
@@ -299,7 +299,7 @@ def secante(fx, tol, Niter, x0, x1):
                 Fx0 = Fun.subs(x, x0) #Evaluacion en el valor inicial X0
                 Fx0 = Fx1.evalf() 
 
-                Fx1 = Fun.subs(x, x1)#Evaluacion en el valor inicial X
+                Fx1 = Fun.subs(x, x1)#Evaluacion en el valor inicial X1
                 Fx1 = Fx1.evalf()
 
                 error = Abs(x1 - x0) # Tramo
