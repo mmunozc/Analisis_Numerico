@@ -154,7 +154,7 @@ def newton(x0, Tol, Niter, fx, df):
     try:
         datos.append([c, '{:^15.7f}'.format(x0), '{:^15.7f}'.format(f)])
 
-        # Al evaluar la derivada en el punto inicial,se busca que sea diferente de 9, ya que al serlo nos encontramos en un punto de inflexion
+        # Al evaluar la derivada en el punto inicial,se busca que sea diferente de 0, ya que al serlo nos encontramos en un punto de inflexion
         #(No se puede continuar ya que la tangente es horinzontal)
         while Error > Tol and f != 0 and derivada != 0 and c < Niter: # El algoritmo converge o se alcanzo limite de iteraciones fijado
 
@@ -219,8 +219,7 @@ def reglaFalsa(a, b, Niter, Tol, fx):
                 xm = (Fb*a - Fa*b)/(Fb-Fa)
                 Fx_3 = Fun.subs(x, xm)
                 Fx_3 = Fx_3.evalf()
-                datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(
-                    xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fx_3)])
+                datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fx_3)])
             else:
 
                 if (Fa*Fx_3 < 0):
@@ -229,24 +228,23 @@ def reglaFalsa(a, b, Niter, Tol, fx):
                     a = xm
 
                 xm0 = xm
-                Fx_2 = Fun.subs(x, a)
+                Fx_2 = Fun.subs(x, a) #Función evaluada en a
                 Fx_2 = Fx_2.evalf()
                 Fa = Fx_2
 
-                Fx_2 = Fun.subs(x, b)
+                Fx_2 = Fun.subs(x, b) #Función evaluada en a
                 Fx_2 = Fx_2.evalf()
                 Fb = Fx_2
 
-                xm = (Fb*a - Fa*b)/(Fb-Fa)
+                xm = (Fb*a - Fa*b)/(Fb-Fa) #Calcular intersección en la recta en el eje x
 
-                Fx_3 = Fun.subs(x, xm)
+                Fx_3 = Fun.subs(x, xm) #Función evaluada en xm (f(xm))
                 Fx_3 = Fx_3.evalf()
 
                 error = Abs(xm-xm0)
                 er = sympify(error)
                 error = er.evalf()
-                datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(
-                    xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fx_3), '{:^15.7E}'.format(error)])
+                datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fx_3), '{:^15.7E}'.format(error)])
             i += 1
     except BaseException as e:
         if str(e) == "can't convert complex to float":
@@ -281,7 +279,7 @@ def secante(fx, tol, Niter, x0, x1):
     Fx1 = Fun
 
     try:
-        while((error > cond) and (i < Niter)):
+        while((error > cond) and (i < Niter)): #criterios de parada
             if i == 0:
                 Fx0 = Fun.subs(x, x0) #Evaluacion en el valor inicial X0
                 Fx0 = Fx0.evalf()
@@ -400,8 +398,6 @@ def jacobi(Ma, Vb, x0, tol, niter):
         "errors": list(),
     }
 
-    sX = np.size(x0)
-
     A = np.matrix(Ma)
 
     b = np.array(Vb)
@@ -450,16 +446,6 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
     E = 1000
     cont = 0
 
-    steps = {'Step 0': np.copy(xA)}
-    while(E > tol and cont < niter):
-        xA = T@xP + C #Multiplica la matriz de transicion con la matriz inicial mas la de coeficientes
-        E = np.linalg.norm(xP - xA) #Obtiene el error sacandole la norma a la resta de la matriz inicial con la matriz A    
-        xP = xA
-        cont = cont + 1
-        iteraciones.append(cont)
-        informacion.append(xA)
-        error.append(E)
-        steps[f'Step {cont+1}'] = np.copy(xA)
 
     datos=zip(iteraciones, error, informacion)
     resultado={"t":T,
