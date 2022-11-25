@@ -343,10 +343,10 @@ def raicesMultiples(fx, x0, tol, niter):
     ex_2 = ex.subs(x, x0)  # Funcion evaluada en x0
     ex_2 = ex_2.evalf() 
 
-    d_ex2 = d_ex.subs(x, x0) # Funcion evaluada en x0
+    d_ex2 = d_ex.subs(x, x0) # primera derivada evaluada en x0
     d_ex2 = d_ex2.evalf()
 
-    d2_ex2 = d2_ex.subs(x, x0) # Funcion evaluada en x0
+    d2_ex2 = d2_ex.subs(x, x0) # segunda derivada evaluada en x0
     d2_ex2 = d2_ex2.evalf()
 
     i = 0
@@ -354,13 +354,13 @@ def raicesMultiples(fx, x0, tol, niter):
     try:
         while((error > cond) and (i < niter)): # Se repite hasta que el intervalo sea lo pequeño que se desee
             if(i == 0):
-                ex_2 = ex.subs(x, xP) # Funcion evaluada en xp
+                ex_2 = ex.subs(x, xP) # Funcion evaluada en valor inicial
                 ex_2 = ex_2.evalf()
             else:
-                d_ex2 = d_ex.subs(x, xP) # Funcion evaluada en xp
+                d_ex2 = d_ex.subs(x, xP) # Funcion evaluada en valor inicial
                 d_ex2 = d_ex2.evalf()
 
-                d2_ex2 = d2_ex.subs(x, xP) # Funcion evaluada en xp
+                d2_ex2 = d2_ex.subs(x, xP) # Funcion evaluada en valor inicial 
                 d2_ex2 = d2_ex2.evalf()
 
                 xA = xP - (ex_2*d_ex2)/((d_ex2)**2 - ex_2*d2_ex2) # Método de Newton-Raphson modificado
