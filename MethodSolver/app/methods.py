@@ -410,13 +410,15 @@ def jacobi(Ma, Vb, x0, tol, niter):
     LU = L+U
 
     T = np.linalg.inv(D) @ LU #Obtiene la matriz de Transicion multiplicando el inverso de D por la matriz LU
+    tFinal=max(abs(np.linalg.eigvals(T)))
     C = np.linalg.inv(D) @ b #Obtiene la matriz de coeficientes multiplicando el inverso de la matriz de D por la matriz b
 
     output["t"] = T
     output["c"] = C
 
     resultado={"t":T,
-                "c":C}
+                "c":C,
+                "esp":tFinal}
     return resultado
 
 #Comentado
