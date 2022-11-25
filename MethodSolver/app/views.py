@@ -329,7 +329,7 @@ def newtonDifDevView(request):
 
         datos = output = newtonDivDif(X,Y)
 
-    if output:    
+    if datos:    
         return render(request, "./metodosPage/newton-DifDev.html",{"datos":datos})
 
     return render(request, "./metodosPage/newton-DifDev.html")
