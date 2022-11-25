@@ -343,10 +343,10 @@ def raicesMultiples(fx, x0, tol, niter):
     ex_2 = ex.subs(x, x0)  # Funcion evaluada en x0
     ex_2 = ex_2.evalf() 
 
-    d_ex2 = d_ex.subs(x, x0) # Funcion evaluada en x0
+    d_ex2 = d_ex.subs(x, x0) # primera derivada evaluada en x0
     d_ex2 = d_ex2.evalf()
 
-    d2_ex2 = d2_ex.subs(x, x0) # Funcion evaluada en x0
+    d2_ex2 = d2_ex.subs(x, x0) # segunda derivada evaluada en x0
     d2_ex2 = d2_ex2.evalf()
 
     i = 0
