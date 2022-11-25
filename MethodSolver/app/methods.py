@@ -85,14 +85,14 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
     Tol
     error = 1.000
 
-    Fun = sympify(fx)
+    Fx = sympify(fx)
     Gx = sympify(gx)
 
     # Iteracion 0
     xP = X0 # Valor inicial (Punto evaluacion)
     xA = 0.0
 
-    Fa = Fun.subs(x, xP) # Funcion evaluada en el valor inicial
+    Fa = Fx.subs(x, xP) # Funcion evaluada en el valor inicial
     Fa = Fa.evalf()
 
     Ga = Gx.subs(x, xP) # Funcion G evaluada en el valor inicial
@@ -154,13 +154,13 @@ def newton(x0, Tol, Niter, fx, df):
     try:
         datos.append([c, '{:^15.7f}'.format(x0), '{:^15.7f}'.format(f)])
 
-        # Al evaluar la derivada en el punto inicial, 
-            #se busca que sea diferente de 9, ya que al serlo nos encontramos en un punto de inflexion (No se puede continuar ya que la tangente es horinzontal)
+        # Al evaluar la derivada en el punto inicial,se busca que sea diferente de 9, ya que al serlo nos encontramos en un punto de inflexion
+        #(No se puede continuar ya que la tangente es horinzontal)
         while Error > Tol and f != 0 and derivada != 0 and c < Niter: # El algoritmo converge o se alcanzo limite de iteraciones fijado
 
             xi = xi-f/derivada # Estimacion del siguiente punto aproximado a la raiz (nuevo valor inicial)
-            derivada = DerF.evalf(subs={x: xi}) # Evaluacion de la derivada con el nuevo valor inicial
-            f = Fun.evalf(subs={x: xi}) # Evaluacion de la derivada con el nuevo valor inicial
+            derivada = DerF.evalf(subs={x: xi}) # Evaluacion de la derivada con el nuevo valor inicial (xi)
+            f = Fun.evalf(subs={x: xi}) # Evaluacion de la derivada con el nuevo valor inicial (xi)
             xn.append(xi)
             c = c+1
             Error = abs(xn[c]-xn[c-1]) # Se reduce entre cada iteracion (Representado por el tramo)
@@ -277,8 +277,8 @@ def secante(fx, tol, Niter, x0, x1):
     Fun = sympify(fx)
 
     y = x0
-    Fx_0 = Fun
-    Fx_1 = Fun
+    Fx0 = Fun
+    Fx1 = Fun
 
     try:
         while((error > cond) and (i < Niter)):
@@ -293,13 +293,13 @@ def secante(fx, tol, Niter, x0, x1):
             else:
                 y = x1 
                 # Se calcula la secante
-                x1 = x1 - (Fx_1*(x1 - x0)/(Fx_1 - Fx_0)) # Punto de corte del intervalo usando la raiz de la secante, (xi+1)
+                x1 = x1 - (Fx1*(x1 - x0)/(Fx1 - Fx0)) # Punto de corte del intervalo usando la raiz de la secante, (xi+1)
                 x0 = y
 
-                Fx0 = Fun.subs(x, x0) #Evaluacion valor a del intervalo [a, b]
+                Fx0 = Fun.subs(x, x0) #Evaluacion en el valor inicial X0
                 Fx0 = Fx1.evalf() 
 
-                Fx1 = Fun.subs(x, x1)#Evaluacion valor b del intervalo [a, b]
+                Fx1 = Fun.subs(x, x1)#Evaluacion en el valor inicial X1
                 Fx1 = Fx1.evalf()
 
                 error = Abs(x1 - x0) # Tramo
