@@ -400,7 +400,7 @@ def jacobi(Ma, Vb, x0, tol, niter):
 
     A = np.matrix(Ma)
 
-    
+
     sX = np.size(x0)
     xA = np.zeros((sX, 1))
 
@@ -424,6 +424,7 @@ def jacobi(Ma, Vb, x0, tol, niter):
     E = 1000
     cont = 0
 
+
     steps = {'Step 0': np.copy(xA)}
     while(E > tol and cont < niter):
         xA = T@xP + C
@@ -431,8 +432,8 @@ def jacobi(Ma, Vb, x0, tol, niter):
         xP = xA
         cont = cont + 1
         steps[f'Step {cont+1}'] = np.copy(xA)
+        print(xA [: , 1])
 
-    print(steps)
 
 
     resultado={"t":T,
@@ -467,6 +468,8 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
     E = 1000
     cont = 0
 
+
+    nose=[]
     steps = {'Step 0': np.copy(xA)}
     while(E > tol and cont < niter):
         xA = T@xP + C
@@ -474,8 +477,8 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
         xP = xA
         cont = cont + 1
         steps[f'Step {cont+1}'] = np.copy(xA)
+        print(xA [: , 1])
 
-    print(steps)
 
 
     datos=zip(iteraciones, error, informacion)
