@@ -4,7 +4,13 @@ from sympy.abc import x
 import numpy as np
 from scipy import linalg
 
-#Comentado
+#fx/Fun = función
+#x0= valor incial
+#a,b = puntos intervalo
+#Tol = toleracia
+#f(letra/s)=función evaluada en esa variable
+
+
 def biseccion(fx, Tol, Niter, a, b):
     output = {
         "columns": ["iter", "a", "xm", "b", "f(xm)", "E"],
@@ -72,20 +78,21 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
         "errors": list()
     }
 
+    #configuración inicial
     datos = list()
     x = sympy.Symbol('x')
     i = 1
     Tol
     error = 1.000
 
-    Fx = sympify(fx)
+    Fun = sympify(fx)
     Gx = sympify(gx)
 
     # Iteracion 0
     xP = X0 # Valor inicial (Punto evaluacion)
     xA = 0.0
 
-    Fa = Fx.subs(x, xP) # Funcion evaluada en el valor inicial
+    Fa = Fun.subs(x, xP) # Funcion evaluada en el valor inicial
     Fa = Fa.evalf()
 
     Ga = Gx.subs(x, xP) # Funcion G evaluada en el valor inicial
@@ -121,32 +128,31 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
     return output
 
 #Comentado
-def newton(X0, Tol, Niter, fx, df):
+def newton(x0, Tol, Niter, fx, df):
 
     output = {
         "columns": ["N", "xi", "F(xi)", "E"],
         "errors": list()
     }
 
+    #configuración inicial
     datos = list()
     x = sympy.Symbol('x')
-    Fun = sympy.sympify(fx, convert_xor=True)
-    DerF = sympy.sympify(df, convert_xor=True)
+    Fun = sympify(fx)
+    DerF = sympify(df)
 
 
     xn = []
     derf = []
-    xi = X0 # Punto de inicio
-    f = Fun.evalf(subs={x: X0})
-    derivada = DerF.evalf(subs={x: X0})
+    xi = x0 # Punto de inicio
+    f = Fun.evalf(subs={x: x0}) #función evaluada en x0
+    derivada = DerF.evalf(subs={x: x0}) #función derivada evaluada en x0
     c = 0
     Error = 100
-
-
     xn.append(xi)
 
     try:
-        datos.append([c, '{:^15.7f}'.format(X0), '{:^15.7f}'.format(f)])
+        datos.append([c, '{:^15.7f}'.format(x0), '{:^15.7f}'.format(f)])
 
         # Al evaluar la derivada en el punto inicial, 
             #se busca que sea diferente de 9, ya que al serlo nos encontramos en un punto de inflexion (No se puede continuar ya que la tangente es horinzontal)
@@ -161,6 +167,7 @@ def newton(X0, Tol, Niter, fx, df):
             derf.append(derivada)
             datos.append([c, '{:^15.7f}'.format(float(xi)), '{:^15.7E}'.format(
                 float(f)), '{:^15.7E}'.format(float(Error))])
+
     except BaseException as e:
         if str(e) == "can't convert complex to float":
             output["errors"].append(
@@ -182,56 +189,57 @@ def reglaFalsa(a, b, Niter, Tol, fx):
         "errors": list()
     }
 
+    #configuración inicial
     datos = list()
     x = sympy.Symbol('x')
     i = 1
     cond = Tol
     error = 1.0000000
 
-    Fx = sympify(fx)
+    Fun = sympify(fx)
 
     xm = 0
     xm0 = 0
     Fx_2 = 0
     Fx_3 = 0
-    Fx_a = 0
-    Fx_b = 0
+    Fa = 0
+    Fb = 0
 
     try:
         while (error > cond) and (i < Niter):
             if i == 1:
-                Fx_2 = Fx.subs(x, a)
+                Fx_2 = Fun.subs(x, a)
                 Fx_2 = Fx_2.evalf()
-                Fx_a = Fx_2
+                Fa = Fx_2
 
-                Fx_2 = Fx.subs(x, b)
+                Fx_2 = Fun.subs(x, b)
                 Fx_2 = Fx_2.evalf()
-                Fx_b = Fx_2
+                Fb = Fx_2
 
-                xm = (Fx_b*a - Fx_a*b)/(Fx_b-Fx_a)
-                Fx_3 = Fx.subs(x, xm)
+                xm = (Fb*a - Fa*b)/(Fb-Fa)
+                Fx_3 = Fun.subs(x, xm)
                 Fx_3 = Fx_3.evalf()
                 datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(
                     xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fx_3)])
             else:
 
-                if (Fx_a*Fx_3 < 0):
+                if (Fa*Fx_3 < 0):
                     b = xm
                 else:
                     a = xm
 
                 xm0 = xm
-                Fx_2 = Fx.subs(x, a)
+                Fx_2 = Fun.subs(x, a)
                 Fx_2 = Fx_2.evalf()
-                Fx_a = Fx_2
+                Fa = Fx_2
 
-                Fx_2 = Fx.subs(x, b)
+                Fx_2 = Fun.subs(x, b)
                 Fx_2 = Fx_2.evalf()
-                Fx_b = Fx_2
+                Fb = Fx_2
 
-                xm = (Fx_b*a - Fx_a*b)/(Fx_b-Fx_a)
+                xm = (Fb*a - Fa*b)/(Fb-Fa)
 
-                Fx_3 = Fx.subs(x, xm)
+                Fx_3 = Fun.subs(x, xm)
                 Fx_3 = Fx_3.evalf()
 
                 error = Abs(xm-xm0)
@@ -266,40 +274,37 @@ def secante(fx, tol, Niter, x0, x1):
     cond = tol
     error = 1.0000000
 
-    Fx = sympify(fx)
+    Fun = sympify(fx)
 
     y = x0
-    Fx_0 = Fx
-    Fx_1 = Fx
+    Fx_0 = Fun
+    Fx_1 = Fun
 
     try:
         while((error > cond) and (i < Niter)):
             if i == 0:
-                Fx_0 = Fx.subs(x, x0) #Evaluacion valor a del intervalo [a, b]
-                Fx_0 = Fx_0.evalf()
-                results.append([i, '{:^15.7f}'.format(
-                    float(x0)), '{:^15.7E}'.format(float(Fx_0))])
+                Fx0 = Fun.subs(x, x0) #Evaluacion valor a del intervalo [a, b]
+                Fx0 = Fx0.evalf()
+                results.append([i, '{:^15.7f}'.format(float(x0)), '{:^15.7E}'.format(float(Fx0))])
             elif i == 1:
-                Fx_1 = Fx.subs(x, x1)#Evaluacion valor b del intervalo [a, b]
-                Fx_1 = Fx_1.evalf()
-                results.append([i, '{:^15.7f}'.format(
-                    float(x1)), '{:^15.7E}'.format(float(Fx_1))])
+                Fx1 = Fun.subs(x, x1)#Evaluacion valor b del intervalo [a, b]
+                Fx1 = Fx1.evalf()
+                results.append([i, '{:^15.7f}'.format(float(x1)), '{:^15.7E}'.format(float(Fx1))])
             else:
                 y = x1 
                 # Se calcula la secante
                 x1 = x1 - (Fx_1*(x1 - x0)/(Fx_1 - Fx_0)) # Punto de corte del intervalo usando la raiz de la secante, (xi+1)
                 x0 = y
 
-                Fx_0 = Fx.subs(x, x0) #Evaluacion valor a del intervalo [a, b]
-                Fx_0 = Fx_1.evalf() 
+                Fx0 = Fun.subs(x, x0) #Evaluacion valor a del intervalo [a, b]
+                Fx0 = Fx1.evalf() 
 
-                Fx_1 = Fx.subs(x, x1)#Evaluacion valor b del intervalo [a, b]
-                Fx_1 = Fx_1.evalf()
+                Fx1 = Fun.subs(x, x1)#Evaluacion valor b del intervalo [a, b]
+                Fx1 = Fx1.evalf()
 
                 error = Abs(x1 - x0) # Tramo
 
-                results.append([i, '{:^15.7f}'.format(float(x1)), '{:^15.7E}'.format(
-                    float(Fx_1)), '{:^15.7E}'.format(float(error))])
+                results.append([i, '{:^15.7f}'.format(float(x1)), '{:^15.7E}'.format(float(Fx1)), '{:^15.7E}'.format(float(error))])
             i += 1
     except BaseException as e:
         if str(e) == "can't convert complex to float":
