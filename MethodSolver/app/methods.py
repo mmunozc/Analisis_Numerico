@@ -472,11 +472,11 @@ def sor(Ma, Vb, x0, w, tol, niter):
     while(not cumple and k<niter):
         xk1=np.zeros(n)
         for i in range(n):
-            s1=np.dot(Ma[i][:i],xk1[:i])
-            s2=np.dot(Ma[i][i+1:], x0[i+1:])
-            xk1[i]=(Vb[i]-s1-s2)/Ma[i][i]*w+(1-w)*x0[i]
+            s1=np.dot(Ma[i][:i],xk1[:i]) #Multiplica los valores de la Matriz A hasta el final de la matriz xk1
+            s2=np.dot(Ma[i][i+1:], x0[i+1:])# Multiplica la matrizA con el vector de inicio
+            xk1[i]=(Vb[i]-s1-s2)/Ma[i][i]*w+(1-w)*x0[i] #Hace las operaciones para obtener el resultado del metodo
         norma=np.linalg.norm(x0-xk1)
-        x0=xk1
+        x0=xk1 #actualiza los valores para el proximo ciclo
         print('Iteracion:{}->{} norma {}'.format(k, xk1, norma))
         iteraciones.append(k)
         informacion.append(xk1)
@@ -484,7 +484,7 @@ def sor(Ma, Vb, x0, w, tol, niter):
         k+=1
     
     if k<niter:
-        datos=zip(iteraciones, informacion)
+        datos=zip(iteraciones, informacion) #guarda el contador, informacion
         resultado={"solucion":x0,
                     "informacion":datos}
         return resultado
@@ -658,13 +658,13 @@ def splineCubica(X, Y):
 def vandermonde(a,b):
     copiaB=np.copy(b)
     longitudMatriz=len(a)
-    matrizVandermonde=np.vander(a)
-    coeficientes=np.linalg.solve(matrizVandermonde, copiaB)
+    matrizVandermonde=np.vander(a) #Obtiene la matriz vandermonde con la matrizA
+    coeficientes=np.linalg.solve(matrizVandermonde, copiaB) #Encuentra la Matriz A con vector B
             
     print(coeficientes)
     x=sympy.Symbol('x')
     polinomio=0
-    for i in range(0, longitudMatriz, 1):
+    for i in range(0, longitudMatriz, 1): #ciclo para asignarle las x y la potencias al polinomio
         potencia=(longitudMatriz-1)-i
         termino=coeficientes[i]*(x**potencia)
         polinomio=polinomio+termino
