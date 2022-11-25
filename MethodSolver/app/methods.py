@@ -432,14 +432,14 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
 
     b = np.array(Vb)
     s = b.size
-    b = np.reshape(b, (s, 1))
+    b = np.reshape(b, (s, 1)) #Rehace el tamaño del vector b
 
-    D = np.diag(np.diag(A))
-    L = -1*np.tril(A)+D
-    U = -1*np.triu(A)+D
+    D = np.diag(np.diag(A)) #saca la diagonal de la matriz A
+    L = -1*np.tril(A)+D #saca la matriz Lower de la matriz A
+    U = -1*np.triu(A)+D #Saca la matriz Upper de la matriz A
 
-    T = np.linalg.inv(D-L) @ U
-    C = np.linalg.inv(D-L) @ b
+    T = np.linalg.inv(D-L) @ U #Obtiene la matriz de Transicion multiplicando el inverso de D-L por la matriz U
+    C = np.linalg.inv(D-L) @ b #Obtiene la matriz Coeficientes multiplicandi ek ubversi de D-L por la matriz b
 
     xP = x0
     E = 1000
@@ -447,8 +447,8 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
 
     steps = {'Step 0': np.copy(xA)}
     while(E > tol and cont < niter):
-        xA = T@xP + C
-        E = np.linalg.norm(xP - xA)
+        xA = T@xP + C #Multiplica la matriz de transicion con la matriz inicial mas la de coeficientes
+        E = np.linalg.norm(xP - xA) #Obtiene el error sacandole la norma a la resta de la matriz inicial con la matriz A    
         xP = xA
         cont = cont + 1
         iteraciones.append(cont)
