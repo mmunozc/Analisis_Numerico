@@ -299,7 +299,7 @@ def secante(fx, tol, Niter, x0, x1):
                 Fx0 = Fun.subs(x, x0) #Evaluacion en el valor inicial X0
                 Fx0 = Fx1.evalf() 
 
-                Fx1 = Fun.subs(x, x1)#Evaluacion en el valor inicial X1
+                Fx1 = Fun.subs(x, x1)#Evaluacion en el valor inicial X
                 Fx1 = Fx1.evalf()
 
                 error = Abs(x1 - x0) # Tramo
