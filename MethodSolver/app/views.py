@@ -2,6 +2,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 import numpy as np
 from app.methods import *
+from app.methods import *
+from app.methods import *
 import numpy.matlib
 # Create your views here.
 

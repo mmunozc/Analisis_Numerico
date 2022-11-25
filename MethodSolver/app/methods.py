@@ -4,54 +4,50 @@ from sympy.abc import x
 import numpy as np
 from scipy import linalg
 
-
+#Comentado
 def biseccion(fx, Tol, Niter, a, b):
-
     output = {
-        "method": "Bisection",
         "columns": ["iter", "a", "xm", "b", "f(xm)", "E"],
         "iterations": Niter,
         "errors": list()
     }
 
+    # Configuraciones iniciales
     datos = list()
     x = Symbol('x')
     i = 1
-    cond = Tol
     error = 1.0000000
-
     Fun = sympify(fx)
 
-    ea = Fun.subs(x, a)
-    ea = ea.evalf()
+    Fa = Fun.subs(x, a) # Funcion evaluada en a
+    Fa = Fa.evalf()
 
     xm0 = 0.0
-    ex_3 = 0
+    Fxm = 0
 
-    xm = (a + b)/2
+    xm = (a + b)/2 # Punto intermedio
 
-    ex_3 = Fun.subs(x, xm)
-    ex_3 = ex_3.evalf()
+    Fxm = Fun.subs(x, xm) # Funcion evaluada en Xm
+    Fxm = Fxm.evalf()
 
     try:
-        datos.append([0, '{:^15.7f}'.format(a), '{:^15.7f}'.format(
-            xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(ex_3)])
-        while (error > cond) and (i < Niter):
-            if (ea*ex_3 < 0):
+        datos.append([0, '{:^15.7f}'.format(a), '{:^15.7f}'.format(xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fxm)]) # Datos con formato dado
+        while (error > Tol) and (i < Niter): # Se repite hasta que el intervalo sea lo pequeño que se desee
+            if (Fa*Fxm < 0): # Se elecciona un intervalo inicial, donde el valor de la funcion cambie de signo en [a,b]
                 b = xm
             else:
-                a = xm
+                a = xm # Cambia de signo en [m,b]
 
             xm0 = xm
-            xm = (a+b)/2
+            xm = (a+b)/2 # Se calcula el punto intermedio del intervalo
 
-            ex_3 = Fun.subs(x, xm)
-            ex_3 = ex_3.evalf()
+            Fxm = Fun.subs(x, xm)
+            Fxm = Fxm.evalf() # Se evalua el punto intermedio en la funcion
 
-            error = Abs(xm-xm0)
+            error = Abs(xm-xm0) # Se calcula el error
 
-            datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(
-                xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(ex_3), '{:^15.7E}'.format(error)])
+            datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(xm), 
+                            '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fxm), '{:^15.7E}'.format(error)]) # Se van agregando las soluciones con el formato deseado
 
             i += 1
     except BaseException as e:
@@ -67,10 +63,10 @@ def biseccion(fx, Tol, Niter, a, b):
     output["root"] = xm
     return output
 
+#Completar los comentarios y explicar mas a fondo
 def puntoFijo(X0, Tol, Niter, fx, gx):
 
     output = {
-        "method": "Fixed point",
         "columns": ["iter", "xi", "g(xi)", "f(xi)", "E"],
         "iterations": Niter,
         "errors": list()
@@ -79,38 +75,39 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
     datos = list()
     x = sympy.Symbol('x')
     i = 1
-    cond = Tol
+    Tol
     error = 1.000
 
-    ex = sympify(fx)
-    rx = sympify(gx)
+    Fx = sympify(fx)
+    Gx = sympify(gx)
 
-    xP = X0
+    xP = X0 # Valor inicial (Punto evaluacion)
     xA = 0.0
 
-    ea = ex.subs(x, xP)
-    ea = ea.evalf()
+    Fa = Fx.subs(x, xP) # Funcion evaluada en el valor inicial
+    Fa = Fa.evalf()
 
-    ra = rx.subs(x, xP)
-    ra = ra.evalf()
+    Ga = Gx.subs(x, xP) # Funcion G evaluada en el valor inicial
+    Ga = Ga.evalf()
 
     datos.append([0, '{:^15.7f}'.format(float(xA)), '{:^15.7f}'.format(
-        float(ra)), '{:^15.7E}'.format(float(ea))])
+        float(Ga)), '{:^15.7E}'.format(float(Fa))])
     try:
-        while((error > cond) and (i < Niter)):
+        while((error > Tol) and (i < Niter)): # Se repite hasta que el error sea menor a la tolerancia
 
-            ra = rx.subs(x, xP)
-            xA = ra.evalf()
+            # Se ...
+            Ga = Gx.subs(x, xP) # Funcion G derivada en el punto de evaluacion
+            xA = Ga.evalf()
 
-            ea = ex.subs(x, xA)
-            ea = ea.evalf()
+            Fa = Fx.subs(x, xA)# Funcion  derivada en el punto de evaluacion
+            Fa = Fa.evalf()
 
-            error = Abs(xA - (xP))
+            error = Abs(xA - (xP)) # Se calcula el error 
 
-            xP = xA
+            xP = xA # Nuevo punto de evaluacion
 
             datos.append([i, '{:^15.7f}'.format(float(xA)), '{:^15.7f}'.format(
-                float(ra)), '{:^15.7E}'.format(float(ea)), '{:^15.7E}'.format(float(error))])
+                float(Ga)), '{:^15.7E}'.format(float(Fa)), '{:^15.7E}'.format(float(error))])
 
             i += 1
 
@@ -122,6 +119,7 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
     output["root"] = xA
     return output
 
+#Comentado
 def newton(X0, Tol, Niter, fx, df):
 
     output = {
@@ -134,32 +132,29 @@ def newton(X0, Tol, Niter, fx, df):
     Fun = sympy.sympify(fx, convert_xor=True)
     DerF = sympy.sympify(df, convert_xor=True)
 
-    fn = []
+
     xn = []
-    E = []
-    N = []
     derf = []
-    xi = X0
+    xi = X0 # Punto de inicio
     f = Fun.evalf(subs={x: X0})
     derivada = DerF.evalf(subs={x: X0})
     c = 0
     Error = 100
 
-    fn.append(f)
+
     xn.append(xi)
-    E.append(Error)
-    N.append(c)
 
     try:
         datos.append([c, '{:^15.7f}'.format(X0), '{:^15.7f}'.format(f)])
-        while Error > Tol and f != 0 and derivada != 0 and c < Niter:
-            xi = xi-f/derivada
-            derivada = DerF.evalf(subs={x: xi})
-            f = Fun.evalf(subs={x: xi})
-            fn.append(f)
+        # Al evaluar la derivada en el punto inicial, 
+            #se busca que sea diferente de 9, ya que al serlo nos encontramos en un punto de inflexion (No se puede continuar ya que la tangente es horinzontal)
+        while Error > Tol and f != 0 and derivada != 0 and c < Niter: # El algoritmo converge o se alcanzo limite de iteraciones fijado
+            xi = xi-f/derivada # Estimacion del siguiente punto aproximado a la raiz
+            derivada = DerF.evalf(subs={x: xi}) # Evaluacion de la derivada
+            f = Fun.evalf(subs={x: xi}) # Se evalua la funcion para ver si el resultado es valido
             xn.append(xi)
             c = c+1
-            Error = abs(xn[c]-xn[c-1])
+            Error = abs(xn[c]-xn[c-1]) # Se reduce entre cada iteracion (Representado por el tramo)
             derf.append(derivada)
             datos.append([c, '{:^15.7f}'.format(float(xi)), '{:^15.7E}'.format(
                 float(f)), '{:^15.7E}'.format(float(Error))])
@@ -175,10 +170,10 @@ def newton(X0, Tol, Niter, fx, df):
     output["root"] = xi
     return output
 
+
 def reglaFalsa(a, b, Niter, Tol, fx):
 
     output = {
-        "method": "Regula falsi",
         "columns": ["iter", "a", "xm", "b", "f(xm)", "E"],
         "iterations": Niter,
         "errors": list()
@@ -190,57 +185,57 @@ def reglaFalsa(a, b, Niter, Tol, fx):
     cond = Tol
     error = 1.0000000
 
-    ex = sympify(fx)
+    Fx = sympify(fx)
 
     xm = 0
     xm0 = 0
-    ex_2 = 0
-    ex_3 = 0
-    ex_a = 0
-    ex_b = 0
+    Fx_2 = 0
+    Fx_3 = 0
+    Fx_a = 0
+    Fx_b = 0
 
     try:
         while (error > cond) and (i < Niter):
             if i == 1:
-                ex_2 = ex.subs(x, a)
-                ex_2 = ex_2.evalf()
-                ex_a = ex_2
+                Fx_2 = Fx.subs(x, a)
+                Fx_2 = Fx_2.evalf()
+                Fx_a = Fx_2
 
-                ex_2 = ex.subs(x, b)
-                ex_2 = ex_2.evalf()
-                ex_b = ex_2
+                Fx_2 = Fx.subs(x, b)
+                Fx_2 = Fx_2.evalf()
+                Fx_b = Fx_2
 
-                xm = (ex_b*a - ex_a*b)/(ex_b-ex_a)
-                ex_3 = ex.subs(x, xm)
-                ex_3 = ex_3.evalf()
+                xm = (Fx_b*a - Fx_a*b)/(Fx_b-Fx_a)
+                Fx_3 = Fx.subs(x, xm)
+                Fx_3 = Fx_3.evalf()
                 datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(
-                    xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(ex_3)])
+                    xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fx_3)])
             else:
 
-                if (ex_a*ex_3 < 0):
+                if (Fx_a*Fx_3 < 0):
                     b = xm
                 else:
                     a = xm
 
                 xm0 = xm
-                ex_2 = ex.subs(x, a)
-                ex_2 = ex_2.evalf()
-                ex_a = ex_2
+                Fx_2 = Fx.subs(x, a)
+                Fx_2 = Fx_2.evalf()
+                Fx_a = Fx_2
 
-                ex_2 = ex.subs(x, b)
-                ex_2 = ex_2.evalf()
-                ex_b = ex_2
+                Fx_2 = Fx.subs(x, b)
+                Fx_2 = Fx_2.evalf()
+                Fx_b = Fx_2
 
-                xm = (ex_b*a - ex_a*b)/(ex_b-ex_a)
+                xm = (Fx_b*a - Fx_a*b)/(Fx_b-Fx_a)
 
-                ex_3 = ex.subs(x, xm)
-                ex_3 = ex_3.evalf()
+                Fx_3 = Fx.subs(x, xm)
+                Fx_3 = Fx_3.evalf()
 
                 error = Abs(xm-xm0)
                 er = sympify(error)
                 error = er.evalf()
                 datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(
-                    xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(ex_3), '{:^15.7E}'.format(error)])
+                    xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fx_3), '{:^15.7E}'.format(error)])
             i += 1
     except BaseException as e:
         if str(e) == "can't convert complex to float":
@@ -255,9 +250,9 @@ def reglaFalsa(a, b, Niter, Tol, fx):
     output["root"] = xm
     return output
 
+#Explicar mas a fondo 
 def secante(fx, tol, Niter, x0, x1):
     output = {
-        "method": "Secant",
         "columns": ["iter", "xi", "f(xi)", "E"],
         "errors": list()
     }
@@ -268,39 +263,40 @@ def secante(fx, tol, Niter, x0, x1):
     cond = tol
     error = 1.0000000
 
-    ex = sympify(fx)
+    Fx = sympify(fx)
 
     y = x0
-    ex_0 = ex
-    ex_1 = ex
+    Fx_0 = Fx
+    Fx_1 = Fx
 
     try:
         while((error > cond) and (i < Niter)):
             if i == 0:
-                ex_0 = ex.subs(x, x0)
-                ex_0 = ex_0.evalf()
+                Fx_0 = Fx.subs(x, x0) #Evaluacion valor a del intervalo [a, b]
+                Fx_0 = Fx_0.evalf()
                 results.append([i, '{:^15.7f}'.format(
-                    float(x0)), '{:^15.7E}'.format(float(ex_0))])
+                    float(x0)), '{:^15.7E}'.format(float(Fx_0))])
             elif i == 1:
-                ex_1 = ex.subs(x, x1)
-                ex_1 = ex_1.evalf()
+                Fx_1 = Fx.subs(x, x1)#Evaluacion valor b del intervalo [a, b]
+                Fx_1 = Fx_1.evalf()
                 results.append([i, '{:^15.7f}'.format(
-                    float(x1)), '{:^15.7E}'.format(float(ex_1))])
+                    float(x1)), '{:^15.7E}'.format(float(Fx_1))])
             else:
                 y = x1
-                x1 = x1 - (ex_1*(x1 - x0)/(ex_1 - ex_0))
+                # Se calcula la secante
+                x1 = x1 - (Fx_1*(x1 - x0)/(Fx_1 - Fx_0)) # Punto de corte del intervalo usando la raiz de la secante
                 x0 = y
 
-                ex_0 = ex.subs(x, x0)
-                ex_0 = ex_1.evalf()
+                Fx_0 = Fx.subs(x, x0) #Evaluacion valor a del intervalo [a, b]
+                Fx_0 = Fx_1.evalf() 
 
-                ex_1 = ex.subs(x, x1)
-                ex_1 = ex_1.evalf()
+                Fx_1 = Fx.subs(x, x1)#Evaluacion valor b del intervalo [a, b]
+                Fx_1 = Fx_1.evalf()
 
-                error = Abs(x1 - x0)
+                error = Abs(x1 - x0) # Tramo
 
                 results.append([i, '{:^15.7f}'.format(float(x1)), '{:^15.7E}'.format(
-                    float(ex_1)), '{:^15.7E}'.format(float(error))])
+                    float(Fx_1)), '{:^15.7E}'.format(float(error))])
             i += 1
     except BaseException as e:
         if str(e) == "can't convert complex to float":
@@ -318,7 +314,6 @@ def secante(fx, tol, Niter, x0, x1):
 def raicesMultiples(fx, x0, tol, niter):
 
     output = {
-        "method": "Multi Roots",
         "columns": ["iter", "xi", "f(xi)", "E"],
         "iterations": niter,
         "errors": list()
@@ -387,13 +382,16 @@ def raicesMultiples(fx, x0, tol, niter):
     output["root"] = xA
     return output
 
+
+#Metodos iterativos
+
+
 def jacobi(Ma, Vb, x0, tol, niter):
     print(Ma)
     print(x0)
     print(Vb)
 
     output = {
-        "method": "Jacobi's Method",
         "iterations": niter,
         "errors": list(),
     }
@@ -423,10 +421,6 @@ def jacobi(Ma, Vb, x0, tol, niter):
     return resultado
 
 def gaussSeidel(Ma, Vb, x0, tol, niter):
-    output = {
-        "method": "Gauss-Seidel's Method",
-        "iterations": niter
-    }
     iteraciones=[]
     informacion=[]
     error=[]
@@ -468,9 +462,40 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
                 "informacion":datos}
     return resultado
 
+def sor(Ma, Vb, x0, w, tol, niter):
+    iteraciones=[]
+    informacion=[]
+    cumple=False
+    n=len(Ma)
+    k=0
+
+    while(not cumple and k<niter):
+        xk1=np.zeros(n)
+        for i in range(n):
+            s1=np.dot(Ma[i][:i],xk1[:i])
+            s2=np.dot(Ma[i][i+1:], x0[i+1:])
+            xk1[i]=(Vb[i]-s1-s2)/Ma[i][i]*w+(1-w)*x0[i]
+        norma=np.linalg.norm(x0-xk1)
+        x0=xk1
+        print('Iteracion:{}->{} norma {}'.format(k, xk1, norma))
+        iteraciones.append(k)
+        informacion.append(xk1)
+        cumple=norma<tol
+        k+=1
+    
+    if k<niter:
+        datos=zip(iteraciones, informacion)
+        resultado={"solucion":x0,
+                    "informacion":datos}
+        return resultado
+    else:
+        return "el sistem no converge"
+
+
+#Metodos interpolacion
+
 def splineLineal(X, Y):
     output = {
-        "method": "Linear Tracers",
         "errors": list()
     }
     X = np.array(X)
@@ -513,7 +538,6 @@ def splineLineal(X, Y):
 
 def splineCuadratica(X, Y):
     output = {
-        "method": "Quadratic Tracers",
         "errors": list()
     }
     X = np.array(X)
@@ -567,7 +591,6 @@ def splineCuadratica(X, Y):
 
 def splineCubica(X, Y):
     output = {
-        "method": "Cubic Tracers",
         "errors": list()
     }
     X = np.array(X)
@@ -631,35 +654,6 @@ def splineCubica(X, Y):
 
     output["results"] = Coef
     return output
-
-def sor(Ma, Vb, x0, w, tol, niter):
-    iteraciones=[]
-    informacion=[]
-    cumple=False
-    n=len(Ma)
-    k=0
-
-    while(not cumple and k<niter):
-        xk1=np.zeros(n)
-        for i in range(n):
-            s1=np.dot(Ma[i][:i],xk1[:i])
-            s2=np.dot(Ma[i][i+1:], x0[i+1:])
-            xk1[i]=(Vb[i]-s1-s2)/Ma[i][i]*w+(1-w)*x0[i]
-        norma=np.linalg.norm(x0-xk1)
-        x0=xk1
-        print('Iteracion:{}->{} norma {}'.format(k, xk1, norma))
-        iteraciones.append(k)
-        informacion.append(xk1)
-        cumple=norma<tol
-        k+=1
-    
-    if k<niter:
-        datos=zip(iteraciones, informacion)
-        resultado={"solucion":x0,
-                    "informacion":datos}
-        return resultado
-    else:
-        return "el sistem no converge"
 
 def vandermonde(a,b):
     copiaB=np.copy(b)
