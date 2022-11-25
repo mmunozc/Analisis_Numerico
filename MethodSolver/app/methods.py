@@ -496,7 +496,7 @@ def splineLineal(X, Y):
     X = np.array(X)
     Y = np.array(Y)
     n = X.size
-    m = 2*(n-1)
+    m = 2*(n-1) #factor m para la formula de los trazadores
     A = np.zeros((m, m))
     b = np.zeros((m, 1))
     Coef = np.zeros((n-1, 2))
@@ -504,7 +504,7 @@ def splineLineal(X, Y):
     # Interpolating condition
     try:
         while i < X.size-1:
-            A[i+1, [2*i+1-1, 2*i+1]] = [X[i+1], 1]
+            A[i+1, [2*i+1-1, 2*i+1]] = [X[i+1], 1]  #Realiza la formula de interpolacion de superficie 
             b[i+1] = Y[i+1]
             i = i+1
 
@@ -538,7 +538,7 @@ def splineCuadratica(X, Y):
     X = np.array(X)
     Y = np.array(Y)
     n = X.size
-    m = 3*(n-1)
+    m = 3*(n-1) # Factor m para la formula de los trazadores, como es cuadratica se multiplica por 3
     A = np.zeros((m, m))
     b = np.zeros((m, 1))
     Coef = np.zeros((n-1, 3))
@@ -547,7 +547,7 @@ def splineCuadratica(X, Y):
         # Interpolating condition
         while i < X.size-1:
 
-            A[i+1, 3*i:3*i+3] = np.hstack((X[i+1]**2, X[i+1], 1))
+            A[i+1, 3*i:3*i+3] = np.hstack((X[i+1]**2, X[i+1], 1)) #Realiza la formula de interpolacion de superficie 
             b[i+1] = Y[i+1]
             i = i+1
 
