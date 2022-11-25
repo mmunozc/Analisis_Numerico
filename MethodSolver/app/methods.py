@@ -443,6 +443,7 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
     U = -1*np.triu(A)+D #Saca la matriz Upper de la matriz A
 
     T = np.linalg.inv(D-L) @ U #Obtiene la matriz de Transicion multiplicando el inverso de D-L por la matriz U
+    tFinal=max(abs(np.linalg.eigvals(T)))
     C = np.linalg.inv(D-L) @ b #Obtiene la matriz Coeficientes multiplicando el inverso de D-L por la matriz b
 
     xP = x0
@@ -463,6 +464,7 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
     datos=zip(iteraciones, error, informacion)
     resultado={"t":T,
                 "c":C,
+                "esp":tFinal,
                 "informacion":datos}
     return resultado
 
@@ -480,6 +482,7 @@ def sor(Ma, Vb, x0, w, tol, niter):
     U = -1*np.triu(A)+D #Saca la matriz Upper de la matriz A
 
     T = np.linalg.inv(D-L) @ U #Obtiene la matriz de Transicion multiplicando el inverso de D-L por la matriz U
+    tFinal=max(abs(np.linalg.eigvals(T)))
     C = np.linalg.inv(D-L) @ b #Obtiene la matriz Coeficientes multiplicando el inverso de D-L por la matriz b
 
     iteraciones=[]
@@ -507,6 +510,7 @@ def sor(Ma, Vb, x0, w, tol, niter):
         resultado={"solucion":x0,
                     "t":T,
                     "c":C,
+                    "esp":tFinal,
                     "informacion":datos}
         return resultado
     else:
