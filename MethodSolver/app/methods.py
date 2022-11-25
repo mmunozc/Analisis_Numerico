@@ -318,52 +318,52 @@ def raicesMultiples(fx, x0, tol, niter):
         "iterations": niter,
         "errors": list()
     }
+    
+    # Configuraciones inciales
     results = list()
-
     x = Symbol('x')
-
     cond = tol
     error = 1.0000
-
     ex = sympify(fx)
 
     d_ex = diff(ex, x)  # Primera derivada de Fx
     d2_ex = diff(d_ex, x)  # Segunda derivada de Fx
 
-    xP = x0
-    ex_2 = ex.subs(x, x0)
-    ex_2 = ex_2.evalf()
 
-    d_ex2 = d_ex.subs(x, x0)
+    xP = x0
+    ex_2 = ex.subs(x, x0)  # Funcion evaluada en x0
+    ex_2 = ex_2.evalf() 
+
+    d_ex2 = d_ex.subs(x, x0) # Funcion evaluada en x0
     d_ex2 = d_ex2.evalf()
 
-    d2_ex2 = d2_ex.subs(x, x0)
+    d2_ex2 = d2_ex.subs(x, x0) # Funcion evaluada en x0
     d2_ex2 = d2_ex2.evalf()
 
     i = 0
-    results.append([i, '{:^15.7E}'.format(x0), '{:^15.7E}'.format(ex_2)])
+    results.append([i, '{:^15.7E}'.format(x0), '{:^15.7E}'.format(ex_2)]) # Datos con formato dado
     try:
-        while((error > cond) and (i < niter)):
+        while((error > cond) and (i < niter)): # Se repite hasta que el intervalo sea lo pequeño que se desee
             if(i == 0):
-                ex_2 = ex.subs(x, xP)
+                ex_2 = ex.subs(x, xP) # Funcion evaluada en xp
                 ex_2 = ex_2.evalf()
             else:
-                d_ex2 = d_ex.subs(x, xP)
+                d_ex2 = d_ex.subs(x, xP) # Funcion evaluada en xp
                 d_ex2 = d_ex2.evalf()
 
-                d2_ex2 = d2_ex.subs(x, xP)
+                d2_ex2 = d2_ex.subs(x, xP) # Funcion evaluada en xp
                 d2_ex2 = d2_ex2.evalf()
 
-                xA = xP - (ex_2*d_ex2)/((d_ex2)**2 - ex_2*d2_ex2)
+                xA = xP - (ex_2*d_ex2)/((d_ex2)**2 - ex_2*d2_ex2) # Método de Newton-Raphson modificado
 
-                ex_A = ex.subs(x, xA)
+                ex_A = ex.subs(x, xA) # Funcion evaluada en xA
                 ex_A = ex_A.evalf()
 
                 error = Abs(xA - xP)
-                error = error.evalf()
+                error = error.evalf() # Se calcula el error
                 er = error
 
-                ex_2 = ex_A
+                ex_2 = ex_A #se establece la nueva aproximación
                 xP = xA
 
                 results.append([i, '{:^15.7E}'.format(float(xA)), '{:^15.7E}'.format(
@@ -387,31 +387,26 @@ def raicesMultiples(fx, x0, tol, niter):
 
 
 def jacobi(Ma, Vb, x0, tol, niter):
-    print(Ma)
-    print(x0)
-    print(Vb)
-
     output = {
         "iterations": niter,
         "errors": list(),
     }
 
     sX = np.size(x0)
-    xA = np.zeros((sX, 1))
 
     A = np.matrix(Ma)
 
     b = np.array(Vb)
     s = b.size
-    b = np.reshape(b, (s, 1))
+    b = np.reshape(b, (s, 1)) #Rehace el tamaño del vector b
 
-    D = np.diag(np.diag(A))
-    L = -1*np.tril(A)+D
-    U = -1*np.triu(A)+D
+    D = np.diag(np.diag(A)) #saca la diagonal de la matriz A
+    L = -1*np.tril(A)+D #saca la matriz Lower de la matriz A
+    U = -1*np.triu(A)+D #Saca la matriz Upper de la matriz A
     LU = L+U
 
-    T = np.linalg.inv(D) @ LU
-    C = np.linalg.inv(D) @ b
+    T = np.linalg.inv(D) @ LU #Obtiene la matriz de Transicion multiplicando el inverso de D por la matriz LU
+    C = np.linalg.inv(D) @ b #Obtiene la matriz de coeficientes multiplicando el inverso de la matriz de D por la matriz b
 
     output["t"] = T
     output["c"] = C
@@ -439,7 +434,7 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
     U = -1*np.triu(A)+D #Saca la matriz Upper de la matriz A
 
     T = np.linalg.inv(D-L) @ U #Obtiene la matriz de Transicion multiplicando el inverso de D-L por la matriz U
-    C = np.linalg.inv(D-L) @ b #Obtiene la matriz Coeficientes multiplicandi ek ubversi de D-L por la matriz b
+    C = np.linalg.inv(D-L) @ b #Obtiene la matriz Coeficientes multiplicando el inverso de D-L por la matriz b
 
     xP = x0
     E = 1000
