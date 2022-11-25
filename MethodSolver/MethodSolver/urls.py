@@ -38,5 +38,5 @@ urlpatterns = [
     path('splineCuadratica', views.splineCuadraticaView, name='aplineCuadratica'),
     path('splineCubica', views.splineCubicaView, name='splineCubica'),
     path('vandermonde', views.vandermondeView, name='vandermonde'),
-    path('newton-difDiv', views.newtonDifDevView, name='newton-difDiv'),
+    path('newton-difDiv', views.newtonDiffDivView, name='newton-difDiv'),
 ]

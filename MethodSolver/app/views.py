@@ -317,7 +317,7 @@ def vandermondeView(request):
     return render(request, "./metodosPage/vandermonde.html")
 
 #Corregir
-def newtonDifDevView(request):
+def newtonDiffDivView(request):
     datos = ()
     if request.method == 'POST':
         x = request.POST["x"]
@@ -330,9 +330,9 @@ def newtonDifDevView(request):
         datos = output = newtonDivDif(X,Y)
 
     if datos:    
-        return render(request, "./metodosPage/newton-DifDev.html",{"datos":datos})
+        return render(request, "./metodosPage/newton-DiffDiv.html",{"datos":datos})
 
-    return render(request, "./metodosPage/newton-DifDev.html")
+    return render(request, "./metodosPage/newton-DiffDiv.html")
 
 #Metodos auxiliar
 def toMatrix(matrixStr):
@@ -393,7 +393,7 @@ def splineOutput(output):
 
     return stringOutput
 
-def newtonDifDevOutput(output):
+def newtonDiffDivOutput(output):
     stringOutput = f'\n"Metodo"\n'
     stringOutput += "\nResults:\n"
     stringOutput += "\nDivided differences table:\n\n"

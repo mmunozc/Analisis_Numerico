@@ -65,7 +65,7 @@
 <!-- TODO: CUADRAR LA TABLA -->
 
     <div class="col-5">
-        <h2>Matrizes</h2>
+        <h2>matrices</h2>
         <table class="table">
             <tr>
                 <th>Matriz T</th>
@@ -77,23 +77,7 @@
                 <td>{{data.c}}</td>
             </tr>
         </table>
-        <h2>Solucion</h2>
-        <table class="table">
-            <tr>
-                <th>Iteraciones</th>
-                <th>Error</th>
-                <th>Datos</th>
-            </tr>
-
-            {% for i,j,k in data.informacion %}
-            <tr>
-                <td>{{i}}</td>
-                <td>{{j}}</td>
-                <td>{{k}}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        
+                
         <h4>El radio espectral es: {{data.esp}}</h4>
     </div>
 </div>
