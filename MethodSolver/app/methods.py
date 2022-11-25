@@ -39,7 +39,7 @@ def biseccion(fx, Tol, Niter, a, b):
                 a = xm # Cambia de signo en [m,b]
 
             xm0 = xm
-            xm = (a+b)/2 # Se calcula el punto intermedio del intervalo
+            xm = (a+b)/2 # Se calcula el punto intermedio del intervalo - Divide el intervalo a la mitadd
 
             Fxm = Fun.subs(x, xm)
             Fxm = Fxm.evalf() # Se evalua el punto intermedio en la funcion
@@ -81,6 +81,7 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
     Fx = sympify(fx)
     Gx = sympify(gx)
 
+    # Iteracion 0
     xP = X0 # Valor inicial (Punto evaluacion)
     xA = 0.0
 
@@ -95,16 +96,16 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
     try:
         while((error > Tol) and (i < Niter)): # Se repite hasta que el error sea menor a la tolerancia
 
-            # Se ...
-            Ga = Gx.subs(x, xP) # Funcion G derivada en el punto de evaluacion
+            # Se evalua el valor inicial en G, para posteriormente evaluar este valor en la funcion F siendo-> Xn=G(x) y F(xn) = F(G(x))
+            Ga = Gx.subs(x, xP) # Funcion G evaluada en el punto de inicial
             xA = Ga.evalf()
 
-            Fa = Fx.subs(x, xA)# Funcion  derivada en el punto de evaluacion
+            Fa = Fx.subs(x, xA)# Funcion evaluada en el valor de la evalucacion de G
             Fa = Fa.evalf()
 
             error = Abs(xA - (xP)) # Se calcula el error 
 
-            xP = xA # Nuevo punto de evaluacion
+            xP = xA # Nuevo punto de evaluacion (Punto inicial)
 
             datos.append([i, '{:^15.7f}'.format(float(xA)), '{:^15.7f}'.format(
                 float(Ga)), '{:^15.7E}'.format(float(Fa)), '{:^15.7E}'.format(float(error))])
@@ -146,12 +147,14 @@ def newton(X0, Tol, Niter, fx, df):
 
     try:
         datos.append([c, '{:^15.7f}'.format(X0), '{:^15.7f}'.format(f)])
+
         # Al evaluar la derivada en el punto inicial, 
             #se busca que sea diferente de 9, ya que al serlo nos encontramos en un punto de inflexion (No se puede continuar ya que la tangente es horinzontal)
         while Error > Tol and f != 0 and derivada != 0 and c < Niter: # El algoritmo converge o se alcanzo limite de iteraciones fijado
-            xi = xi-f/derivada # Estimacion del siguiente punto aproximado a la raiz
-            derivada = DerF.evalf(subs={x: xi}) # Evaluacion de la derivada
-            f = Fun.evalf(subs={x: xi}) # Se evalua la funcion para ver si el resultado es valido
+
+            xi = xi-f/derivada # Estimacion del siguiente punto aproximado a la raiz (nuevo valor inicial)
+            derivada = DerF.evalf(subs={x: xi}) # Evaluacion de la derivada con el nuevo valor inicial
+            f = Fun.evalf(subs={x: xi}) # Evaluacion de la derivada con el nuevo valor inicial
             xn.append(xi)
             c = c+1
             Error = abs(xn[c]-xn[c-1]) # Se reduce entre cada iteracion (Representado por el tramo)
@@ -282,9 +285,9 @@ def secante(fx, tol, Niter, x0, x1):
                 results.append([i, '{:^15.7f}'.format(
                     float(x1)), '{:^15.7E}'.format(float(Fx_1))])
             else:
-                y = x1
+                y = x1 
                 # Se calcula la secante
-                x1 = x1 - (Fx_1*(x1 - x0)/(Fx_1 - Fx_0)) # Punto de corte del intervalo usando la raiz de la secante
+                x1 = x1 - (Fx_1*(x1 - x0)/(Fx_1 - Fx_0)) # Punto de corte del intervalo usando la raiz de la secante, (xi+1)
                 x0 = y
 
                 Fx_0 = Fx.subs(x, x0) #Evaluacion valor a del intervalo [a, b]
