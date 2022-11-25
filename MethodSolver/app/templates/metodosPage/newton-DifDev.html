@@ -43,7 +43,7 @@
 
     <div class="col-5">
 
-        {% if data %}
+        {% if datos %}
         <table class="table">
             <thead class="thead-dark">
                 <h3>Matriz</h3>
@@ -51,7 +51,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <h4>{{data.D}}</h4>
+                        <h4>{{datos.D}}</h4>
                     </td>
                 </tr>
             </tbody>
@@ -62,13 +62,11 @@
                 <h3>Coeficientes</h3>
             </thead>
             <tbody>
-                {%for i in data.coef %}
                 <tr>
                     <td>
-                        <h4>{{i}}</h4>
+                        <h4>{{datos.Coef}}</h4>
                     </td>
                 </tr>
-                {% endfor %}
             </tbody>
         </table>
 

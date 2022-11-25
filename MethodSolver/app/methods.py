@@ -250,7 +250,7 @@ def reglaFalsa(a, b, Niter, Tol, fx):
     output["root"] = xm
     return output
 
-#Explicar mas a fondo 
+#Comentado
 def secante(fx, tol, Niter, x0, x1):
     output = {
         "columns": ["iter", "xi", "f(xi)", "E"],
@@ -311,6 +311,7 @@ def secante(fx, tol, Niter, x0, x1):
     output["root"] = y
     return output
 
+#Comentado
 def raicesMultiples(fx, x0, tol, niter):
 
     output = {
@@ -382,10 +383,9 @@ def raicesMultiples(fx, x0, tol, niter):
     output["root"] = xA
     return output
 
-
 #Metodos iterativos
 
-
+#Comentado
 def jacobi(Ma, Vb, x0, tol, niter):
     output = {
         "iterations": niter,
@@ -415,6 +415,7 @@ def jacobi(Ma, Vb, x0, tol, niter):
                 "c":C}
     return resultado
 
+#Comentado
 def gaussSeidel(Ma, Vb, x0, tol, niter):
     iteraciones=[]
     informacion=[]
@@ -457,7 +458,22 @@ def gaussSeidel(Ma, Vb, x0, tol, niter):
                 "informacion":datos}
     return resultado
 
+#Comentado
 def sor(Ma, Vb, x0, w, tol, niter):
+
+    A = np.matrix(Ma)
+
+    b = np.array(Vb)
+    s = b.size
+    b = np.reshape(b, (s, 1)) #Rehace el tamaño del vector b
+
+    D = np.diag(np.diag(A)) #saca la diagonal de la matriz A
+    L = -1*np.tril(A)+D #saca la matriz Lower de la matriz A
+    U = -1*np.triu(A)+D #Saca la matriz Upper de la matriz A
+
+    T = np.linalg.inv(D-L) @ U #Obtiene la matriz de Transicion multiplicando el inverso de D-L por la matriz U
+    C = np.linalg.inv(D-L) @ b #Obtiene la matriz Coeficientes multiplicando el inverso de D-L por la matriz b
+
     iteraciones=[]
     informacion=[]
     cumple=False
@@ -481,11 +497,12 @@ def sor(Ma, Vb, x0, w, tol, niter):
     if k<niter:
         datos=zip(iteraciones, informacion) #guarda el contador, informacion
         resultado={"solucion":x0,
+                    "t":T,
+                    "c":C,
                     "informacion":datos}
         return resultado
     else:
         return "el sistem no converge"
-
 
 #Metodos interpolacion
 
@@ -592,58 +609,55 @@ def splineCubica(X, Y):
     Y = np.array(Y)
     n = X.size
     m = 4*(n-1)
-    A = np.zeros((m, m))
-    b = np.zeros((m, 1))
-    Coef = np.zeros((n-1, 4))
+    A = np.zeros((m,m))
+    b = np.zeros((m,1))
+    Coef = np.zeros((n-1,4))
     i = 0
     try:
-        # Interpolating condition
+        #Interpolating condition
         while i < X.size-1:
-
-            A[i+1, 4*i:4*i+4] = np.hstack((X[i+1]**3, X[i+1]**2, X[i+1], 1))
-            b[i+1] = Y[i+1]
+            
+            A[i+1,4*i:4*i+4]= np.hstack((X[i+1]**3,X[i+1]**2,X[i+1],1)) 
+            b[i+1]=Y[i+1]
             i = i+1
 
-        A[0, 0:4] = np.hstack((X[0]**3, X[0]**2, X[0]**1, 1))
+        A[0,0:4] = np.hstack((X[0]**3,X[0]**2,X[0]**1,1))
         b[0] = Y[0]
-        # Condition of continuity
+        #Condition of continuity
         i = 1
         while i < X.size-1:
-            A[X.size-1+i, 4*i-4:4*i +
-                4] = np.hstack((X[i]**3, X[i]**2, X[i], 1, -X[i]**3, -X[i]**2, -X[i], -1))
+            A[X.size-1+i,4*i-4:4*i+4] = np.hstack((X[i]**3,X[i]**2,X[i],1,-X[i]**3,-X[i]**2,-X[i],-1))
             b[X.size-1+i] = 0
             i = i+1
-        # Condition of smoothness
+        #Condition of smoothness
         i = 1
         while i < X.size-1:
-            A[2*n-3+i, 4*i-4:4*i +
-                4] = np.hstack((3*X[i]**2, 2*X[i], 1, 0, -3*X[i]**2, -2*X[i], -1, 0))
+            A[2*n-3+i,4*i-4:4*i+4] = np.hstack((3*X[i]**2,2*X[i],1,0,-3*X[i]**2,-2*X[i],-1,0))
             b[2*n-3+i] = 0
             i = i+1
-
-        # Concavity condition
+        
+        #Concavity condition
         i = 1
         while i < X.size-1:
-            A[3*n-5+i, 4*i-4:4*i +
-                4] = np.hstack((6*X[i], 2, 0, 0, -6*X[i], -2, 0, 0))
+            A[3*n-5+i,4*i-4:4*i+4] = np.hstack((6*X[i],2,0,0,-6*X[i],-2,0,0))
             b[n+5+i] = 0
             i = i+1
-
-        # Boundary conditions
-        A[m-2, 0:2] = [6*X[0], 2]
-        b[m-2] = 0
-        A[m-1, m-4:m-2] = [6*X[X.size-1], 2]
-        b[m-1] = 0
-
-        Saux = linalg.solve(A, b)
-        # Order Coefficients
+        
+        #Boundary conditions  
+        A[m-2,0:2]=[6*X[0],2];
+        b[m-2]=0;
+        A[m-1,m-4:m-2]=[6*X[X.size-1],2];
+        b[m-1]=0;
+        
+        Saux = linalg.solve(A,b)
+        #Order Coefficients
         i = 0
         j = 0
         while i < n-1:
-            Coef[i, :] = np.hstack((Saux[j], Saux[j+1], Saux[j+2], Saux[j+3]))
+            Coef[i,:] = np.hstack((Saux[j],Saux[j+1],Saux[j+2],Saux[j+3]))
             i = i+1
             j = j + 4
-    except BaseException as e:
+    except BaseException as e:  
         output["errors"].append("Error in data: " + str(e))
         return output
 
@@ -690,11 +704,10 @@ def newtonDivDif(X, Y):
         aux = np.diff(aux0)
         aux2 = X[i:n] - X[0:n-i]
         D[i:n,i] = aux/aux2.T  
-
-    Coef = np.diag(D)
-    
-    
+        Coef = np.diag(D)
     output["D"] = D
     output["Coef"] = Coef
-    
+    print(D)
+    print(Coef)
+
     return output

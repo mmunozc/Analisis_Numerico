@@ -318,6 +318,7 @@ def vandermondeView(request):
 
 #Corregir
 def newtonDifDevView(request):
+    datos = ()
     if request.method == 'POST':
         x = request.POST["x"]
         X = x.split(",")
@@ -325,12 +326,10 @@ def newtonDifDevView(request):
         y = request.POST["y"]
         Y = y.split(",")
         Y = [float(i) for i in Y]
-        
-        output = newtonDivDif(X,Y)
 
-        if output:    
-            datos = newtonDifDevOutput(output)
+        datos = output = newtonDivDif(X,Y)
 
+    if output:    
         return render(request, "./metodosPage/newton-DifDev.html",{"datos":datos})
 
     return render(request, "./metodosPage/newton-DifDev.html")
@@ -358,7 +357,7 @@ def toVector(vectorStr):
     return auxV
 
 def splineOutput(output):
-    stringOutput = f'\n{output["method"]}\n'
+    stringOutput = f'\n"Metodo"\n'
     stringOutput += "\nResults:\n"
     stringOutput += "\nTracer coefficients:\n\n"
     rel = output["results"]
@@ -395,7 +394,7 @@ def splineOutput(output):
     return stringOutput
 
 def newtonDifDevOutput(output):
-    stringOutput = f'\n{output["method"]}\n'
+    stringOutput = f'\n"Metodo"\n'
     stringOutput += "\nResults:\n"
     stringOutput += "\nDivided differences table:\n\n"
     rel = output["D"]
@@ -403,7 +402,6 @@ def newtonDifDevOutput(output):
 
     stringOutput += "\nNewton's polynomials coefficents:\n\n"
     rel = output["Coef"]
-    stringOutput += '{:^7f}'.format(rel[0,0]) +"   //L \n"
     
     stringOutput += "\nNewton interpolating polynomials:\n\n"
     rel = output["Coef"]
